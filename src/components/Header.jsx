@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 export default class Header extends Component {
 	render() {
@@ -7,12 +8,12 @@ export default class Header extends Component {
 				<div className="header__content">
 					<div className="header__logo">
 						<a href="index.html">
-							<img src="assets/img/logo1.png" alt="" />
+							<img src="assets/assets/img/logo1.png" alt="" />
 						</a>
 					</div>
 
 					<nav className="header__nav">
-						<a href="profile.html">Profile</a>
+						<Link to="/profile">Profile</Link>
 						<a href="about.html">About</a>
 						<a href="contacts.html">Contacts</a>
 					</nav>
@@ -64,19 +65,19 @@ export default class Header extends Component {
 							<div className="header__drop">
 								<a href="cart.html" className="header__all">Go to cart</a>
 								<div className="header__product">
-									<img src="img/store/item4.jpg" alt=""></img>
+									<img src="assets/img/store/item4.jpg" alt=""></img>
 									<p><a href="product.html">Headphones ZR-991</a></p>
 									<span>$199</span>
 									<button type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.41,12l6.3-6.29a1,1,0,1,0-1.42-1.42L12,10.59,5.71,4.29A1,1,0,0,0,4.29,5.71L10.59,12l-6.3,6.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L12,13.41l6.29,6.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Z" /></svg></button>
 								</div>
 								<div className="header__product">
-									<img src="img/store/item3.jpg" alt=""></img>
+									<img src="assets/img/store/item3.jpg" alt=""></img>
 									<p><a href="product.html">Music Blank</a></p>
 									<span>$3.99</span>
 									<button type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.41,12l6.3-6.29a1,1,0,1,0-1.42-1.42L12,10.59,5.71,4.29A1,1,0,0,0,4.29,5.71L10.59,12l-6.3,6.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L12,13.41l6.29,6.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Z" /></svg></button>
 								</div>
 								<div className="header__product">
-									<img src="img/store/item2.jpg" alt=""></img>
+									<img src="assets/img/store/item2.jpg" alt=""></img>
 									<p><a href="product.html">Microphone R4</a></p>
 									<span>$799</span>
 									<button type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.41,12l6.3-6.29a1,1,0,1,0-1.42-1.42L12,10.59,5.71,4.29A1,1,0,0,0,4.29,5.71L10.59,12l-6.3,6.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L12,13.41l6.29,6.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Z" /></svg></button>
