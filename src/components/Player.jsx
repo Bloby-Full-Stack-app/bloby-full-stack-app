@@ -1,53 +1,67 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+//import { setTrack } from '../redux/store';
 
- function Player () {
+function Player({ playlist, track }) {
 
-    const [playlist, setPlaylist] = useState([
-        { title: 'Epic Cinematicsss', artist: 'AudioPizza', src: 'http://blast.volkovdesign.com/audio/12071151_epic-cinematic-trailer_by_audiopizza_preview.mp3' },
-        { title: 'Motivation', artist: 'AudioJungle', src: 'http://srm.net/mp3/srm_drepte_hona_8kl.mp3' },
-        { title: 'My heart will go on', artist: 'Celine Dion', src: 'http://80s.lt/Files/mp3/EN/Celine%20Dion/Celine%20Dion%20-%20My%20Heart%20Will%20Go%20On.mp3' },
-      ]);
+    const dispatch = useDispatch();
+    const currentPlaylist = useSelector(state => state.currentPlaylist);
+    const currentTrack = useSelector(state => state.currentTrack);
 
-      const [currentSongIndex, setCurrentSongIndex] = useState(0);
+    const handleClick = (event) => {
+        event.preventDefault();
+        console.log(currentTrack);
+      };
 
-      useEffect(() => {
-        // load audio source when current song index changes
-        const audioPlayer = document.getElementById('audio');
-        audioPlayer.src = playlist[currentSongIndex].src;
-        audioPlayer.play();
-      }, [currentSongIndex]);
-    
-      const handlePrevSong = () => {
-        // decrement current song index (with boundary check)
-        const newIndex = currentSongIndex - 1;
+    function handleTrackEnd() {
+        //setTrack("testing.mp3");
+        /*if (currentPlaylist) {
+            const currentIndex = currentPlaylist.indexOf(currentTrack);
+            if (currentIndex === currentPlaylist.length - 1) {
+                dispatch(setTrack(null));
+            } else {
+                dispatch(setTrack(currentPlaylist[currentIndex + 1]));
+            }
+        } else {
+            dispatch(setTrack(null));
+        }*/
+    }
+
+    /*const handlePrevTrack = () => {
+        // decrement current track index (with boundary check)
+        const newIndex = currentTrack - 1;
         if (newIndex >= 0) {
-          setCurrentSongIndex(newIndex);
+            setTrack(newIndex);
         }
-      };
-    
-      const handleNextSong = () => {
-        // increment current song index (with boundary check)
-        const newIndex = currentSongIndex + 1;
+    };
+
+    const handleNextTrack = () => {
+        // increment current track index (with boundary check)
+        const newIndex = currentTrack + 1;
         if (newIndex < playlist.length) {
-          setCurrentSongIndex(newIndex);
+            setTrack(newIndex);
         }
-      };
+    };*/
 
     return (
         <div className="player">
-        <div className="player__cover">
-          <img src="assets/img/covers/cover.svg" alt="" />
+            <div className="player__cover">
+                <img src="assets/img/covers/cover.svg" alt="" />
+            </div>
+
+            <div className="player__content">
+                <span className="player__track">
+                    <b className="player__title">zzz</b> – <span className="player__artist">zzz</span>
+                </span>
+                <>
+                {track && (
+                    <audio src={ track.mp3 } onEnded={handleTrackEnd} id="audio" autoPlay></audio>
+                )}
+                </>
+                <button onClick={handleClick}>Prev</button>
+                <button onClick={handleClick}>Next</button>
+            </div>
         </div>
-  
-        <div className="player__content">
-          <span className="player__track">
-            <b className="player__title">{playlist[currentSongIndex].title}</b> – <span className="player__artist">{playlist[currentSongIndex].artist}</span>
-          </span>
-          <audio src={playlist[currentSongIndex].src} id="audio" controls></audio>
-          <button onClick={handlePrevSong}>Prev</button>
-          <button onClick={handleNextSong}>Next</button>
-        </div>
-      </div>
     );
 }
 

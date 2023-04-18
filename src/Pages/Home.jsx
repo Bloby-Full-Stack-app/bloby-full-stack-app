@@ -1,14 +1,16 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Release from '../components/Releases'
 import UpcomingEvent from '../components/UpcomingEvent'
+import { useSelector } from 'react-redux';
 import Artist from '../components/Artist'
-import Single from '../components/Single'
+import Track from '../components/Track/Track'
 import Podcast from '../components/Podcast'
 import Product from '../components/Product'
 import News from '../components/News'
+import TrackList from '../components/Track/TrackList'
 
 
-const Home = () => {
+function Home () {
 	return (
 		<main className="main">
 			<div className="container-fluid">
@@ -111,11 +113,11 @@ const Home = () => {
 							</div>
 							<div className="col-12">
 								<ul className="main__list">
-									<Single number="1" top="true" rate="4" image="assets/img/covers/cover1.jpg" artist="Cinematic" title="AudioPizza" length="2:35" />
-									<Single number="2" top="true" rate="10" image="assets/img/covers/cover2.jpg" artist="Chawki" title="AudioPizza" length="3:35" />
-									<Single number="3" top="true" rate="12" image="assets/img/covers/cover3.jpg" artist="AkremMag" title="EpicMotivational" length="4:21" />
-									<Single number="4" top="true" rate="23" image="assets/img/covers/cover4.jpg" artist="Samara" title="Minimum" length="3:47" />
-									<Single number="5" top="true" rate="18" image="assets/img/covers/cover5.jpg" artist="Balti" title="XDXD" length="3:47" />
+									<Track number="1" top="true" rate="4" Image="assets/img/covers/cover1.jpg" artist="Cinematic" title="AudioPizza" length="2:35" />
+									<Track number="2" top="true" rate="10" Image="assets/img/covers/cover2.jpg" artist="Chawki" title="AudioPizza" length="3:35" />
+									<Track number="3" top="true" rate="12" Image="assets/img/covers/cover3.jpg" artist="AkremMag" title="EpicMotivational" length="4:21" />
+									<Track number="4" top="true" rate="23" Image="assets/img/covers/cover4.jpg" artist="Samara" title="Minimum" length="3:47" />
+									<Track number="5" top="true" rate="18" Image="assets/img/covers/cover5.jpg" artist="Balti" title="XDXD" length="3:47" />
 								</ul>
 							</div>
 						</div>
@@ -129,11 +131,7 @@ const Home = () => {
 							</div>
 							<div className="col-12">
 								<ul className="main__list">
-									<Single image="assets/img/covers/cover6.jpg" artist="Jason Aldean" title="Got What I Got" length="3:47" />
-									<Single image="assets/img/covers/cover7.jpg" artist="Jason Aldean" title="Got What I Got" length="3:47" />
-									<Single image="assets/img/covers/cover8.jpg" artist="Jason Aldean" title="Got What I Got" length="3:47" />
-									<Single image="assets/img/covers/cover9.jpg" artist="Jason Aldean" title="Got What I Got" length="3:47" />
-									<Single image="assets/img/covers/cover10.jpg" artist="Jason Aldean" title="Got What I Got" length="3:47" />
+									<TrackList />
 								</ul>
 							</div>
 						</div>

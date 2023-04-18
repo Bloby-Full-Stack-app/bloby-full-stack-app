@@ -3,39 +3,39 @@ import Artist from '../components/Artist';
 import UpcomingEvent from '../components/UpcomingEvent';
 import Breadcrumb from '../components/Breadcrumb';
 
-const Artists = () => {
+function Artists() {
 	return (
-		<main class="main">
-			<div class="container-fluid">
-				<div class="row row--grid">
+		<main className="main">
+			<div className="container-fluid">
+				<div className="row row--grid">
 					<Breadcrumb />
-					<div class="col-12">
-						<div class="main__title main__title--page">
+					<div className="col-12">
+						<div className="main__title main__title--page">
 							<h1>Artists</h1>
 						</div>
 					</div>
 				</div>
 
-				<div class="row row--grid">
-					<div class="col-12">
-						<div class="main__filter">
-							<form action="#" class="main__filter-search">
+				<div className="row row--grid">
+					<div className="col-12">
+						<div className="main__filter">
+							<form action="#" className="main__filter-search">
 								<input type="text" placeholder="Search..." />
 								<button type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.71,20.29,18,16.61A9,9,0,1,0,16.61,18l3.68,3.68a1,1,0,0,0,1.42,0A1,1,0,0,0,21.71,20.29ZM11,18a7,7,0,1,1,7-7A7,7,0,0,1,11,18Z" /></svg></button>
 							</form>
 
-							<div class="main__filter-wrap">
-								<select class="main__select" name="genres">
+							<div className="main__filter-wrap">
+								<select className="main__select" name="genres">
 									<option value="all">All artists</option>
 									<option value="legacy">Legacy artists</option>
 									<option value="active">Active artists</option>
 								</select>
 
-								<select class="main__select" name="years">
+								<select className="main__select" name="years">
 									<option value="All genres">All genres</option>
 									<option value="1">Alternative</option>
 									<option value="2">Blues</option>
-									<option value="3">Classical</option>
+									<option value="3">classNameical</option>
 									<option value="4">Country</option>
 									<option value="5">Electronic</option>
 									<option value="6">Hip-Hop/Rap</option>
@@ -47,14 +47,14 @@ const Artists = () => {
 								</select>
 							</div>
 
-							<div class="slider-radio">
+							<div className="slider-radio">
 								<input type="radio" name="grade" id="featured" checked="checked" /><label for="featured">Featured</label>
 								<input type="radio" name="grade" id="popular" /><label for="popular">Popular</label>
 								<input type="radio" name="grade" id="newest" /><label for="newest">Newest</label>
 							</div>
 						</div>
 
-						<div class="row row--grid">
+						<div className="row row--grid">
 							<Artist img="assets/img/artists/artist4.jpg" name="BENEE Featuring" />
 							<Artist img="assets/img/artists/artist3.jpg" name="BENEE Featuring" />
 							<Artist img="assets/img/artists/artist5.jpg" name="BENEE Featuring" />
@@ -71,29 +71,29 @@ const Artists = () => {
 							<Artist img="assets/img/artists/artist8.jpg" name="BENEE Featuring" />
 						</div>
 
-						<button class="main__load" type="button">Load more</button>
+						<button className="main__load" type="button">Load more</button>
 					</div>
 				</div>
 
-				<section class="row row--grid">
-					<div class="col-12">
-						<div class="main__title">
+				<section className="row row--grid">
+					<div className="col-12">
+						<div className="main__title">
 							<h2>Upcoming Events</h2>
 
-							<a href="events.html" class="main__link">See all <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.92,11.62a1,1,0,0,0-.21-.33l-5-5a1,1,0,0,0-1.42,1.42L14.59,11H7a1,1,0,0,0,0,2h7.59l-3.3,3.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l5-5a1,1,0,0,0,.21-.33A1,1,0,0,0,17.92,11.62Z" /></svg></a>
+							<a href="events.html" className="main__link">See all <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.92,11.62a1,1,0,0,0-.21-.33l-5-5a1,1,0,0,0-1.42,1.42L14.59,11H7a1,1,0,0,0,0,2h7.59l-3.3,3.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l5-5a1,1,0,0,0,.21-.33A1,1,0,0,0,17.92,11.62Z" /></svg></a>
 						</div>
 					</div>
-					<div class="col-12">
-						<div class="main__carousel-wrap">
-							<div class="main__carousel main__carousel--events owl-carousel" id="events">
+					<div className="col-12">
+						<div className="main__carousel-wrap">
+							<div className="main__carousel main__carousel--events owl-carousel" id="events">
 								<UpcomingEvent img="assets/img/events/event1.jpg" soldOut={false} date="March 16, 2021" time="7:00 pm" name="Big Daddy" address="71 Pilgrim Avenue Chevy Chase, MD 20815" />
 								<UpcomingEvent img="assets/img/events/event2.jpg" soldOut={true} date="March 16, 2021" time="5:00 pm" name="Big Daddy" address="71 Pilgrim Avenue Chevy Chase, MD 20815" />
 								<UpcomingEvent img="assets/img/events/event3.jpg" soldOut={false} date="March 16, 2021" time="7:00 pm" name="Big Daddy" address="71 Pilgrim Avenue Chevy Chase, MD 20815" />
 								<UpcomingEvent img="assets/img/events/event4.jpg" soldOut={false} date="April 23, 2023" time="9:30 pm" name="Rocky Pub" address="514 S. Magnolia St. Orlando, FL 32806" />
 							</div>
 
-							<button class="main__nav main__nav--prev" data-nav="#events" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17,11H9.41l3.3-3.29a1,1,0,1,0-1.42-1.42l-5,5a1,1,0,0,0-.21.33,1,1,0,0,0,0,.76,1,1,0,0,0,.21.33l5,5a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42L9.41,13H17a1,1,0,0,0,0-2Z" /></svg></button>
-							<button class="main__nav main__nav--next" data-nav="#events" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.92,11.62a1,1,0,0,0-.21-.33l-5-5a1,1,0,0,0-1.42,1.42L14.59,11H7a1,1,0,0,0,0,2h7.59l-3.3,3.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l5-5a1,1,0,0,0,.21-.33A1,1,0,0,0,17.92,11.62Z" /></svg></button>
+							<button className="main__nav main__nav--prev" data-nav="#events" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17,11H9.41l3.3-3.29a1,1,0,1,0-1.42-1.42l-5,5a1,1,0,0,0-.21.33,1,1,0,0,0,0,.76,1,1,0,0,0,.21.33l5,5a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42L9.41,13H17a1,1,0,0,0,0-2Z" /></svg></button>
+							<button className="main__nav main__nav--next" data-nav="#events" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.92,11.62a1,1,0,0,0-.21-.33l-5-5a1,1,0,0,0-1.42,1.42L14.59,11H7a1,1,0,0,0,0,2h7.59l-3.3,3.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l5-5a1,1,0,0,0,.21-.33A1,1,0,0,0,17.92,11.62Z" /></svg></button>
 						</div>
 					</div>
 				</section>
