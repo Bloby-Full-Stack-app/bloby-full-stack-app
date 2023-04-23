@@ -5,5 +5,13 @@ export const fetchReleases = params => {
       params,
     };
   };
+
+  export const fetchCurrentUserReleases = params => {
+    return {
+      url: `http://localhost:8090/api/getTracks`,
+      method: 'GET',
+      params,
+    };
+  };
   
   

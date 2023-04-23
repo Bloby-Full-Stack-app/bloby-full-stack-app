@@ -11,19 +11,19 @@ function Profile() {
 	const [name, setName] = useState('')
 	const [filename, setFilename] = useState('')
 	const [artist, setArtist] = useState('')
-    const [genre, setGenre] = useState('')
+	const [genre, setGenre] = useState('')
 	const [mp3, setMp3] = useState('')
 
 	const signOut = useSignOut()
 
 	const handleSubmit = async (event) => {
-        dispatch(createTrack({
-            name: name,
+		dispatch(createTrack({
+			name: name,
 			artist: artist,
-            //filename: filename,
+			//filename: filename,
 			mp3: mp3,
 			genre: genre,
-        }))
+		}))
 	}
 
 	return (
@@ -57,7 +57,7 @@ function Profile() {
 								</li>
 
 								<li className="nav-item">
-									<a className="nav-link" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab-2" aria-selected="false">Orders</a>
+									<a className="nav-link" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab-2" aria-selected="false">Releases</a>
 								</li>
 
 								<li className="nav-item">
@@ -129,17 +129,19 @@ function Profile() {
 
 											<div className="dashbox__list-wrap">
 												<ul className="main__list main__list--dashbox">
-													{user.likedTracks.map(track => (
+													{user.likedTracks.length === 0 ?
+														<p>No liked tracks</p> :
+														user.likedTracks.map(track => (
+															<Track
+																key={track.id}
+																name={track.name}
+																artist={track.artist}
+																Image={track.Image}
+																length={track.length}
+															/>
+														))
+													}
 
-														<Track
-															key={track.id}
-															name={track.name}
-															artist={track.artist}
-															Image={track.Image}
-															length={track.length}
-														//onClick={() => handleClick(track)}
-														/>
-													))}
 												</ul>
 											</div>
 										</div>
@@ -170,128 +172,30 @@ function Profile() {
 							</div>
 
 							<div className="tab-pane fade" id="tab-2" role="tabpanel">
-								<div className="row row--grid">
-									<div className="col-12">
-										<div className="dashbox">
-											<div className="dashbox__table-wrap">
-												<div className="dashbox__table-scroll">
-													<table className="main__table">
-														<thead>
-															<tr>
-																<th>№</th>
-																<th><a href="#">Product <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.71,10.21,12,7.91l2.29,2.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42l-3-3a1,1,0,0,0-1.42,0l-3,3a1,1,0,0,0,1.42,1.42Zm4.58,4.58L12,17.09l-2.29-2.3a1,1,0,0,0-1.42,1.42l3,3a1,1,0,0,0,1.42,0l3-3a1,1,0,0,0-1.42-1.42Z" /></svg></a></th>
-																<th><a href="#" className="active">Title <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17,13.41,12.71,9.17a1,1,0,0,0-1.42,0L7.05,13.41a1,1,0,0,0,0,1.42,1,1,0,0,0,1.41,0L12,11.29l3.54,3.54a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29A1,1,0,0,0,17,13.41Z" /></svg></a></th>
-																<th><a href="#" className="active">Date <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17,9.17a1,1,0,0,0-1.41,0L12,12.71,8.46,9.17a1,1,0,0,0-1.41,0,1,1,0,0,0,0,1.42l4.24,4.24a1,1,0,0,0,1.42,0L17,10.59A1,1,0,0,0,17,9.17Z" /></svg></a></th>
-																<th><a href="#">Quantity <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.71,10.21,12,7.91l2.29,2.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42l-3-3a1,1,0,0,0-1.42,0l-3,3a1,1,0,0,0,1.42,1.42Zm4.58,4.58L12,17.09l-2.29-2.3a1,1,0,0,0-1.42,1.42l3,3a1,1,0,0,0,1.42,0l3-3a1,1,0,0,0-1.42-1.42Z" /></svg></a></th>
-																<th><a href="#">Total <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.71,10.21,12,7.91l2.29,2.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42l-3-3a1,1,0,0,0-1.42,0l-3,3a1,1,0,0,0,1.42,1.42Zm4.58,4.58L12,17.09l-2.29-2.3a1,1,0,0,0-1.42,1.42l3,3a1,1,0,0,0,1.42,0l3-3a1,1,0,0,0-1.42-1.42Z" /></svg></a></th>
-																<th><a href="#">Status <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.71,10.21,12,7.91l2.29,2.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42l-3-3a1,1,0,0,0-1.42,0l-3,3a1,1,0,0,0,1.42,1.42Zm4.58,4.58L12,17.09l-2.29-2.3a1,1,0,0,0-1.42,1.42l3,3a1,1,0,0,0,1.42,0l3-3a1,1,0,0,0-1.42-1.42Z" /></svg></a></th>
-															</tr>
-														</thead>
-														<tbody>
-															<tr>
-																<td>
-																	<div className="main__table-text main__table-text--number"><a href="#modal-info" className="open-modal">631</a></div>
-																</td>
-																<td>
-																	<div className="main__table-img">
-																		<img src="assets/img/store/item3.jpg" alt="" />
-																	</div>
-																</td>
-																<td>
-																	<div className="main__table-text"><a href="#">Music Blank</a></div>
-																</td>
-																<td>
-																	<div className="main__table-text">Aug 21, 2021</div>
-																</td>
-																<td>
-																	<div className="main__table-text">17</div>
-																</td>
-																<td>
-																	<div className="main__table-text main__table-text--price">$67.83</div>
-																</td>
-																<td>
-																	<div className="main__table-text main__table-text--green"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.72,8.79l-4.29,4.3L8.78,11.44a1,1,0,1,0-1.41,1.41l2.35,2.36a1,1,0,0,0,.71.29,1,1,0,0,0,.7-.29l5-5a1,1,0,0,0,0-1.42A1,1,0,0,0,14.72,8.79ZM12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm0,18a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z" /></svg>  Delivered</div>
-																</td>
-															</tr>
-															<tr>
-																<td>
-																	<div className="main__table-text main__table-text--number"><a href="#modal-info" className="open-modal">632</a></div>
-																</td>
-																<td>
-																	<div className="main__table-img">
-																		<img src="assets/img/store/item3.jpg" alt="" />
-																	</div>
-																</td>
-																<td>
-																	<div className="main__table-text"><a href="#">Music Blank</a></div>
-																</td>
-																<td>
-																	<div className="main__table-text">Aug 21, 2021</div>
-																</td>
-																<td>
-																	<div className="main__table-text">17</div>
-																</td>
-																<td>
-																	<div className="main__table-text main__table-text--price">$67.83</div>
-																</td>
-																<td>
-																	<div className="main__table-text main__table-text--red"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.71,8.29a1,1,0,0,0-1.42,0L12,10.59,9.71,8.29A1,1,0,0,0,8.29,9.71L10.59,12l-2.3,2.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L12,13.41l2.29,2.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42L13.41,12l2.3-2.29A1,1,0,0,0,15.71,8.29Zm3.36-3.36A10,10,0,1,0,4.93,19.07,10,10,0,1,0,19.07,4.93ZM17.66,17.66A8,8,0,1,1,20,12,7.95,7.95,0,0,1,17.66,17.66Z" /></svg> Canceled</div>
-																</td>
-															</tr>
-															<tr>
-																<td>
-																	<div className="main__table-text main__table-text--number"><a href="#modal-info" className="open-modal">708</a></div>
-																</td>
-																<td>
-																	<div className="main__table-img">
-																		<img src="assets/img/store/item4.jpg" alt="" />
-																	</div>
-																</td>
-																<td>
-																	<div className="main__table-text"><a href="#">Headphones ZR-991</a></div>
-																</td>
-																<td>
-																	<div className="main__table-text">Aug 14, 2021</div>
-																</td>
-																<td>
-																	<div className="main__table-text">1</div>
-																</td>
-																<td>
-																	<div className="main__table-text main__table-text--price">$199</div>
-																</td>
-																<td>
-																	<div className="main__table-text main__table-text--grey"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10,0,1,0,22,12,10.01114,10.01114,0,0,0,12,2Zm0,18a8,8,0,1,1,8-8A8.00917,8.00917,0,0,1,12,20ZM14.09814,9.63379,13,10.26807V7a1,1,0,0,0-2,0v5a1.00025,1.00025,0,0,0,1.5.86621l2.59814-1.5a1.00016,1.00016,0,1,0-1-1.73242Z" /></svg> On the way</div>
-																</td>
-															</tr>
-															<tr>
-																<td>
-																	<div className="main__table-text main__table-text--number"><a href="#modal-info" className="open-modal">750</a></div>
-																</td>
-																<td>
-																	<div className="main__table-img">
-																		<img src="assets/img/store/item1.jpg" alt="" />
-																	</div>
-																</td>
-																<td>
-																	<div className="main__table-text"><a href="#">Vinyl Player</a></div>
-																</td>
-																<td>
-																	<div className="main__table-text">Aug 5, 2021</div>
-																</td>
-																<td>
-																	<div className="main__table-text">1</div>
-																</td>
-																<td>
-																	<div className="main__table-text main__table-text--price">$11 899</div>
-																</td>
-																<td>
-																	<div className="main__table-text main__table-text--green"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.72,8.79l-4.29,4.3L8.78,11.44a1,1,0,1,0-1.41,1.41l2.35,2.36a1,1,0,0,0,.71.29,1,1,0,0,0,.7-.29l5-5a1,1,0,0,0,0-1.42A1,1,0,0,0,14.72,8.79ZM12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm0,18a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z" /></svg> Delivered</div>
-																</td>
-															</tr>
-														</tbody>
-													</table>
-												</div>
+								<div className="col-12">
+									<div className="dashbox">
+										<div className="dashbox__title">
+											<h3><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.65,2.24a1,1,0,0,0-.8-.23l-13,2A1,1,0,0,0,7,5V15.35A3.45,3.45,0,0,0,5.5,15,3.5,3.5,0,1,0,9,18.5V10.86L20,9.17v4.18A3.45,3.45,0,0,0,18.5,13,3.5,3.5,0,1,0,22,16.5V3A1,1,0,0,0,21.65,2.24ZM5.5,20A1.5,1.5,0,1,1,7,18.5,1.5,1.5,0,0,1,5.5,20Zm13-2A1.5,1.5,0,1,1,20,16.5,1.5,1.5,0,0,1,18.5,18ZM20,7.14,9,8.83v-3L20,4.17Z" /></svg></h3>
+
+											<div className="dashbox__wrap">
+												<a className="dashbox__refresh" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10,0,0,0,5.12,4.77V3a1,1,0,0,0-2,0V7.5a1,1,0,0,0,1,1H8.62a1,1,0,0,0,0-2H6.22A8,8,0,1,1,4,12a1,1,0,0,0-2,0A10,10,0,1,0,12,2Zm0,6a1,1,0,0,0-1,1v3a1,1,0,0,0,1,1h2a1,1,0,0,0,0-2H13V9A1,1,0,0,0,12,8Z" /></svg></a>
+												<a className="dashbox__more" href="#">View All</a>
 											</div>
+										</div>
+
+										<div className="dashbox__list-wrap">
+											<ul className="main__list main__list--dashbox">
+												{user.releases.map(track => (
+													<Track
+														key={track.id}
+														name={track.name}
+														artist={track.artist}
+														Image={track.Image}
+														length={track.length}
+													//onClick={() => handleClick(track)}
+													/>
+												))}
+											</ul>
 										</div>
 									</div>
 								</div>
@@ -311,34 +215,29 @@ function Profile() {
 															<img src="assets/img/covers/cover4.jpg" alt="" />
 														</div>
 														<div className="release__stat">
-															<input id="filename" type="file" name="filename" onChange={e => setFilename(e?.target?.value)}/>
+															<input id="mp3" type="file" name="mp3" onChange={e => setMp3(e?.target?.value)} />
 														</div>
 													</div>
 													<div className="release__list">
 														<div className="col-12">
 															<div className="sign__group">
 																<label className="sign__label" for="title">Title</label>
-																<input id="title" type="text" name="title" className="sign__input" placeholder="Title" value={name} onChange={e => setName(e?.target?.value)}/>
+																<input id="title" type="text" name="title" className="sign__input" placeholder="Title" value={name} onChange={e => setName(e?.target?.value)} />
 															</div>
 														</div>
 														<div className="col-12">
 															<div className="sign__group">
 																<label className="sign__label" for="artist">Artist</label>
-																<input id="artist" type="text" name="artist" className="sign__input" placeholder="Artist" value={artist} onChange={e => setArtist(e?.target?.value)}/>
+																<input id="artist" type="text" name="artist" className="sign__input" placeholder="Artist" value={artist} onChange={e => setArtist(e?.target?.value)} />
 															</div>
 														</div>
 														<div className="col-12 col-md-6 col-lg-12">
 															<div className="sign__group">
 																<label className="sign__label" for="genre">Genre</label>
-																<input id="genre" type="text" name="genre" className="sign__input" placeholder="Genre" value={genre} onChange={e => setGenre(e?.target?.value)}/>
+																<input id="genre" type="text" name="genre" className="sign__input" placeholder="Genre" value={genre} onChange={e => setGenre(e?.target?.value)} />
 															</div>
 														</div>
-														<div className="col-12 col-md-6 col-lg-12">
-															<div className="sign__group">
-																<label className="sign__label" for="genre">Track link</label>
-																<input id="mp3" type="text" name="mp3" className="sign__input" value={mp3} placeholder="Track link (.mp3)" onChange={e => setMp3(e?.target?.value)}/>
-															</div>
-														</div>
+														
 													</div>
 												</div>
 												<div className="col-12">
@@ -442,7 +341,7 @@ function Profile() {
 									</div>
 								</div>
 							</div>
-							
+
 						</div>
 					</div>
 				</div>
