@@ -8,6 +8,8 @@ import {
   POST_TRACKS_SUCCESS,
   UPDATE_TRACKS_FAIL,
   UPDATE_TRACKS_SUCCESS,
+  UPLOAD_TRACKS_FAIL,
+  UPLOAD_TRACKS_SUCCESS,
 } from '../constants.jsx';
 
 const initialState = {
@@ -33,6 +35,7 @@ export default function tracks(state = initialState, action) {
         tracks: payload,
       };
     case POST_TRACKS_SUCCESS:
+    case UPLOAD_TRACKS_SUCCESS:
     case UPDATE_TRACKS_SUCCESS:
     case DELETE_TRACKS_SUCCESS:
       return {
@@ -42,6 +45,7 @@ export default function tracks(state = initialState, action) {
       };
     case GET_TRACKS_FAIL:
     case POST_TRACKS_FAIL:
+    case UPLOAD_TRACKS_FAIL:
     case UPDATE_TRACKS_FAIL:
     case DELETE_TRACKS_FAIL:
       return {
