@@ -1,5 +1,5 @@
 import axios from '../../api/axios';
-import { addTrack } from '../../api/endpoints/tracks';
+import { addTrack, uploadTrack } from '../../api/endpoints/tracks';
 import api from '../../utils/api';
 import {
   API,
@@ -8,6 +8,8 @@ import {
   POST_TRACKS_FAIL,
   POST_TRACKS_SUCCESS,
   UPDATE_TRACKS_SUCCESS,
+  UPLOAD_TRACKS_FAIL,
+  UPLOAD_TRACKS_SUCCESS,
 } from '../constants.jsx';
 
 const token = localStorage.getItem('_auth');
@@ -55,6 +57,26 @@ export const createTrack = (data) => async dispatch => {
   } catch (err) {
     dispatch({
       type: POST_TRACKS_FAIL,
+      payload: err.response.data.message,
+    });
+    //dispatch(setAlert(err.response.data.message, 'error'));
+  }
+};
+
+// Create or update Track
+export const getUploadedTrack = (data) => async dispatch => {
+  try {
+    const res = await axios(uploadTrack(data))
+    console.log(res);
+    await dispatch({
+      type: UPLOAD_TRACKS_SUCCESS,
+      payload: res.data.message,
+    });
+    return res.data;
+    //dispatch(setAlert(res.data.message, 'success'));
+  } catch (err) {
+    dispatch({
+      type: UPLOAD_TRACKS_FAIL,
       payload: err.response.data.message,
     });
     //dispatch(setAlert(err.response.data.message, 'error'));

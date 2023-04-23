@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Breadcrumb from '../components/Breadcrumb';
 import Track from '../components/Track/Track';
-import { createTrack } from '../redux/actions/tracks';
+import { createTrack, getUploadedTrack } from '../redux/actions/tracks';
 import { useDispatch } from 'react-redux';
 import { useSignOut } from 'react-auth-kit'
 
@@ -9,21 +9,43 @@ function Profile() {
 	const user = JSON.parse(localStorage.getItem("_auth_state"));
 	const dispatch = useDispatch()
 	const [name, setName] = useState('')
-	const [filename, setFilename] = useState('')
+	const [image, setImage] = useState('')
 	const [artist, setArtist] = useState('')
 	const [genre, setGenre] = useState('')
-	const [mp3, setMp3] = useState('')
+	const [album, setAlbum] = useState('')
+	const [mp3File, setMp3File] = useState(null)
 
 	const signOut = useSignOut()
 
+	const handleMp3Upload = async (event) => {
+		const mp3File = event.target.files[0];
+		setMp3File(event.target.files[0]);
+		const formData = new FormData();
+		formData.append("mp3", mp3File);
+		const promise = dispatch(getUploadedTrack(formData));
+
+		promise.then(res => {
+			setName(res.data.name || '') 
+			setArtist(res.data.artist || '')
+			setImage(res.data.Image || '')
+			setGenre(res.data.genre || '')
+			setAlbum(res.data.album || '')
+			setMp3File(res.data.mp3)
+		  }).catch(error => {
+			console.log(error); // this will log any errors that occurred during the request
+		  });
+	};
+
 	const handleSubmit = async (event) => {
-		dispatch(createTrack({
-			name: name,
-			artist: artist,
-			//filename: filename,
-			mp3: mp3,
-			genre: genre,
-		}))
+		console.log(mp3File)
+		const formData = new FormData();
+		formData.append('name', name);
+		formData.append('artist', artist);
+		formData.append('genre', genre);
+		formData.append('Image', image);
+		formData.append('mp3', mp3File);
+		dispatch(createTrack(formData));
+
 	}
 
 	return (
@@ -212,10 +234,10 @@ function Profile() {
 													<div className="release__content">
 														<label className="sign__label" for="image">Cover</label>
 														<div className="release__cover">
-															<img src="assets/img/covers/cover4.jpg" alt="" />
+															<img src="http://localhost:8090/public/images/beb6db53-459d-49d8-b93e-13190953c2bc.png" alt="" onChange={e => setImage(e?.target?.src)}/>
 														</div>
 														<div className="release__stat">
-															<input id="mp3" type="file" name="mp3" onChange={e => setMp3(e?.target?.value)} />
+															<input id="mp3" name="mp3" type="file" accept="audio/mp3" onChange={handleMp3Upload} />
 														</div>
 													</div>
 													<div className="release__list">
@@ -231,13 +253,19 @@ function Profile() {
 																<input id="artist" type="text" name="artist" className="sign__input" placeholder="Artist" value={artist} onChange={e => setArtist(e?.target?.value)} />
 															</div>
 														</div>
-														<div className="col-12 col-md-6 col-lg-12">
+														<div className="col-12">
 															<div className="sign__group">
 																<label className="sign__label" for="genre">Genre</label>
 																<input id="genre" type="text" name="genre" className="sign__input" placeholder="Genre" value={genre} onChange={e => setGenre(e?.target?.value)} />
 															</div>
 														</div>
-														
+														<div className="col-12">
+															<div className="sign__group">
+																<label className="sign__label" for="album">Album</label>
+																<input id="album" type="text" name="album" className="sign__input" placeholder="Genre" value={album} onChange={e => setAlbum(e?.target?.value)} />
+															</div>
+														</div>
+
 													</div>
 												</div>
 												<div className="col-12">
