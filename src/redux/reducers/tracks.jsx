@@ -1,6 +1,7 @@
 import {
   DELETE_TRACKS_FAIL,
   DELETE_TRACKS_SUCCESS,
+  GET_SINGLE_TRACK_SUCCESS,
   GET_TRACKS_DETAILS_SUCCESS,
   GET_TRACKS_FAIL,
   GET_TRACKS_SUCCESS,
@@ -29,10 +30,10 @@ export default function tracks(state = initialState, action) {
         loading: false,
         tracksList: payload,
       };
-    case GET_TRACKS_DETAILS_SUCCESS:
+    case GET_SINGLE_TRACK_SUCCESS:
       return {
         ...state,
-        tracks: payload,
+        track: payload,
       };
     case POST_TRACKS_SUCCESS:
     case UPLOAD_TRACKS_SUCCESS:

@@ -24,3 +24,11 @@ export const uploadTrack = (data) => {
       data,
   }
 };
+
+export const getTrack = ({ id, params }) => {
+  return {
+    url: `http://localhost:8090/api/getTrack/${id}`,
+    method: 'GET',
+    params,
+  };
+};

@@ -61,12 +61,12 @@ function TrackList() {
         <>
             {tracks.slice(0, 5).map(track => (
                 <Track
-                    key={track.id}
+                    key={track._id}
                     name={track.name}
                     artist={track.artist}
                     image={track.Image}
                     length={track.length}
-                    //onClick={() => handleClick(track)}
+                    id={track._id}
                 />
             ))}
         </>

@@ -3,6 +3,8 @@ import { addTrack, uploadTrack } from '../../api/endpoints/tracks';
 import api from '../../utils/api';
 import {
   API,
+  GET_SINGLE_TRACK_FAIL,
+  GET_SINGLE_TRACK_SUCCESS,
   GET_TRACKS_FAIL,
   GET_TRACKS_SUCCESS,
   POST_TRACKS_FAIL,
@@ -80,5 +82,20 @@ export const getUploadedTrack = (data) => async dispatch => {
       payload: err.response.data.message,
     });
     //dispatch(setAlert(err.response.data.message, 'error'));
+  }
+};
+
+export const getTrack = trackId => async dispatch => {
+  try {
+    const res = await api().get(API + trackId, config);
+    dispatch({
+      type: GET_SINGLE_TRACK_SUCCESS,
+      payload: res.data.data,
+    });
+  } catch (err) {
+    dispatch({
+      type: GET_SINGLE_TRACK_FAIL,
+      payload: err.response.data.message,
+    });
   }
 };
