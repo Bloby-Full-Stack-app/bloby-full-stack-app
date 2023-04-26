@@ -2,14 +2,12 @@ import { useEffect, useState } from 'react';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import { AuthProvider, useIsAuthenticated, RequireAuth } from 'react-auth-kit';
-import { useDispatch, useSelector } from 'react-redux';
 import Home from "./Pages/Home";
 import { Provider } from 'react-redux';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link, 
   Navigate,
 } from "react-router-dom"
 import Artists from './Pages/Artists';
@@ -18,6 +16,7 @@ import Player from './components/Player';
 import Releases from './Pages/Releases';
 import store from './redux/store';
 import Login from './Pages/Login';
+import Release from './Pages/Release';
 
 
 const PrivateRoute = ({ Component }) => {
@@ -40,6 +39,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/artists" element={<Artists />} />
               <Route path="/releases" element={<Releases />} />
+              <Route path="/Release" element={<Release />} />
               <Route path="/profile" element={
                 <RequireAuth loginPath={'/login'}>
                   <Profile />
