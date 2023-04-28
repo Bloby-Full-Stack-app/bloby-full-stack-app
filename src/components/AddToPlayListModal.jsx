@@ -32,7 +32,7 @@ const AddToPlayListModal = (props) => {
             playlistName: playlistName
         }));
         //onAddToPlaylist(playlistId);
-        //props.onCloseModal;
+        props.onCloseModal();
     };
 
     return (
