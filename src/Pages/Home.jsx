@@ -131,7 +131,7 @@ function Home () {
 							</div>
 							<div className="col-12">
 								<ul className="main__list">
-									<TrackList />
+									<TrackList limit="4" />
 								</ul>
 							</div>
 						</div>

@@ -65,8 +65,8 @@ function Login () {
 								</div>
 
 								<div className="sign__group sign__group--checkbox">
-									<input id="remember" name="remember" type="checkbox" checked="checked" />
-									<label for="remember">Remember Me</label>
+									<input id="remember" name="remember" type="checkbox" />
+									<label>Remember Me</label>
 								</div>
 								
 								<button className="sign__btn" type="submit">Sign in</button>

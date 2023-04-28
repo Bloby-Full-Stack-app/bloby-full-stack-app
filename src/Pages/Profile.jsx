@@ -1,9 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Breadcrumb from '../components/Breadcrumb';
 import Track from '../components/Track/Track';
 import { createTrack, getUploadedTrack } from '../redux/actions/tracks';
 import { useDispatch } from 'react-redux';
 import { useSignOut } from 'react-auth-kit'
+import { getCurrentUserPlaylists } from '../redux/actions/playlist';
+import { getUserPlaylists } from '../api/endpoints/playlist';
+import axios from 'axios';
 
 function Profile() {
 	const user = JSON.parse(localStorage.getItem("_auth_state"));
@@ -14,6 +17,7 @@ function Profile() {
 	const [genre, setGenre] = useState('')
 	const [album, setAlbum] = useState('')
 	const [mp3File, setMp3File] = useState(null)
+	const [playlists, setPlaylists] = useState([]);
 
 	const signOut = useSignOut()
 
@@ -25,15 +29,15 @@ function Profile() {
 		const promise = dispatch(getUploadedTrack(formData));
 
 		promise.then(res => {
-			setName(res.data.name || '') 
+			setName(res.data.name || '')
 			setArtist(res.data.artist || '')
 			setImage(res.data.Image || '')
 			setGenre(res.data.genre || '')
 			setAlbum(res.data.album || '')
 			setMp3File(res.data.mp3)
-		  }).catch(error => {
+		}).catch(error => {
 			console.log(error); // this will log any errors that occurred during the request
-		  });
+		});
 	};
 
 	const handleSubmit = async (event) => {
@@ -45,8 +49,22 @@ function Profile() {
 		formData.append('Image', image);
 		formData.append('mp3', mp3File);
 		dispatch(createTrack(formData));
-
 	}
+
+	useEffect(() => {
+        const getCurrentUserPlaylists = async () => {
+            try {
+                const response = await axios(getUserPlaylists());
+                const { data } = response;
+                setPlaylists(data?.data || []);
+            } catch (error) {
+                console.log("Error loading playlists:", error);
+            }
+        };
+        getCurrentUserPlaylists();
+    }, []);
+
+	
 
 	return (
 		<main className="main">
@@ -155,7 +173,8 @@ function Profile() {
 														<p>No liked tracks</p> :
 														user.likedTracks.map(track => (
 															<Track
-																key={track.id}
+																key={track._id}
+																id={track._id}
 																name={track.name}
 																artist={track.artist}
 																Image={track.Image}
@@ -181,11 +200,15 @@ function Profile() {
 
 											<div className="dashbox__list-wrap">
 												<ul className="main__list main__list--dashbox">
-													<Track image="assets/img/covers/cover4.jpg" artist="Playlist 1" title="34 songs" length="5:25:47" />
-													<Track image="assets/img/covers/cover5.jpg" artist="Playlist 2" title="34 songs" length="5:25:47" />
-													<Track image="assets/img/covers/cover9.jpg" artist="Playlist 3" title="34 songs" length="5:25:47" />
-													<Track image="assets/img/covers/cover10.jpg" artist="Playlist 4" title="34 songs" length="5:25:47" />
-													<Track image="assets/img/covers/cover11.jpg" artist="Playlist 5" title="34 songs" length="5:25:47" />
+												{playlists.map((playlist) => (
+													<Track 
+														key={playlist._id}
+														id={playlist._id}
+														name={playlist.name}
+														artist={playlist.tracks.length > 1 ? playlist.tracks.length + " Tracks" : playlist.tracks.length + " Track"}
+													
+													/>
+												))}
 												</ul>
 											</div>
 										</div>
@@ -234,7 +257,7 @@ function Profile() {
 													<div className="release__content">
 														<label className="sign__label" for="image">Cover</label>
 														<div className="release__cover">
-															<img src="http://localhost:8090/public/images/beb6db53-459d-49d8-b93e-13190953c2bc.png" alt="" onChange={e => setImage(e?.target?.src)}/>
+															<img src="assets/img/cover.png" alt="" onChange={e => setImage(e?.target?.src)} />
 														</div>
 														<div className="release__stat">
 															<input id="mp3" name="mp3" type="file" accept="audio/mp3" onChange={handleMp3Upload} />
