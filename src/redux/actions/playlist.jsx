@@ -43,8 +43,6 @@ export const getCurrentUserPlaylists = () => async dispatch => {
 };
 
 export const addTrackToPlaylist = (trackId, data) => async dispatch => {
-  console.log(trackId);
-    console.log("in");
   try {
     const res = await axios(addTracksToPlaylist(trackId, data))
     
