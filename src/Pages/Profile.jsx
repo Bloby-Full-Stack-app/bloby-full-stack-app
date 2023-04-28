@@ -7,6 +7,7 @@ import { useSignOut } from 'react-auth-kit'
 import { getCurrentUserPlaylists } from '../redux/actions/playlist';
 import { getUserPlaylists } from '../api/endpoints/playlist';
 import axios from 'axios';
+import PlaylistList from '../components/Playlist/PlaylistList';
 
 function Profile() {
 	const user = JSON.parse(localStorage.getItem("_auth_state"));
@@ -200,15 +201,7 @@ function Profile() {
 
 											<div className="dashbox__list-wrap">
 												<ul className="main__list main__list--dashbox">
-												{playlists.map((playlist) => (
-													<Track 
-														key={playlist._id}
-														id={playlist._id}
-														name={playlist.name}
-														artist={playlist.tracks.length > 1 ? playlist.tracks.length + " Tracks" : playlist.tracks.length + " Track"}
-													
-													/>
-												))}
+													<PlaylistList />
 												</ul>
 											</div>
 										</div>
