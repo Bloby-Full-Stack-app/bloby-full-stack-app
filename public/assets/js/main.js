@@ -412,12 +412,26 @@ $(document).ready(function () {
 		</div>
 	</div>
 	`;
-	var player = new Plyr('#audio', {
+	var player = new Plyr('#audio0', {
 		controls,
 		volume: 0.5,
 	});
 
-	var audio = $('#audio');
+	var audio = $('#audio0');
+
+	var player = new Plyr('#audio1', {
+		controls,
+		volume: 0.5,
+	});
+
+	var audio = $('#audio1');
+
+	var player = new Plyr('#audio2', {
+		controls,
+		volume: 0.5,
+	});
+
+	var audio = $('#audio2');
 
 	player.on('play', event => {
 		$('a[data-link].active, a[data-playlist].active').addClass('play');
