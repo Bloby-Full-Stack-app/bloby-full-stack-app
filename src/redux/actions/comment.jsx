@@ -1,9 +1,6 @@
 import axios from '../../api/axios';
 import { commentPLaylist } from '../../api/endpoints/comment';
-import { addTracksToPlaylist, getUserPlaylists } from '../../api/endpoints/playlist';
-import api from '../../utils/api';
 import {
-  API,
   POST_ADD_COMMENT_TO_PLAYLIST_SUCCESS,
   POST_ADD_COMMENT_TO_PLAYLIST_FAIL,
 } from '../constants.jsx';

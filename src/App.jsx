@@ -18,6 +18,7 @@ import store from './redux/store';
 import Login from './Pages/Login';
 import Release from './Pages/Release';
 import Playlist from './Pages/Playlist';
+import TrackEditor from './Pages/TrackEditor';
 
 
 const PrivateRoute = ({ Component }) => {
@@ -42,6 +43,7 @@ function App() {
               <Route path="/releases" element={<Releases />} />
               <Route path="/Release" element={<Release />} />
               <Route path="/playlist/:playlistId" element={<Playlist />} />
+              <Route path="/trackeditor" element={<TrackEditor />} />
               <Route path="/profile" element={
                 <RequireAuth loginPath={'/login'}>
                   <Profile />
