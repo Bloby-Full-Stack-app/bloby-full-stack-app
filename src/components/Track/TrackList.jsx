@@ -3,7 +3,7 @@ import Track from './Track';
 import { fetchTracks } from '../../api/endpoints/tracks';
 import axios from '../../api/axios';
 import { useSearchParams } from 'react-router-dom';
-import AddToPlaylistModal from '../AddToPlayListModal';
+import AddToPlaylistModal from '../Modals/AddToPlayListModal';
 
 function TrackList() {
   const [tracks, setTracks] = useState([]);

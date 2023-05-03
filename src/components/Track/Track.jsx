@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
-import { getUserPlaylists } from '../../api/endpoints/playlist';
-import axios from '../../api/axios';
-import AddToPlayListModal from '../AddToPlayListModal';
+import AddToPlayListModal from '../Modals/AddToPlayListModal';
 
 function Track(props) {
-    const [selectedPlaylist, setSelectedPlaylist] = useState(null);
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -14,11 +11,6 @@ function Track(props) {
         console.log(props.id);
     };
 
-    const handleAddToPlaylist = (playlistId) => {
-        // Perform logic to add track to selected playlist
-        console.log(`Added xd to ${playlistId}`);
-        setSelectedPlaylist(playlistId);
-      };
     return (
         <>
             <li className="single-item">
@@ -40,7 +32,7 @@ function Track(props) {
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16,2a3,3,0,0,0-3,3V19a3,3,0,0,0,6,0V5A3,3,0,0,0,16,2Zm1,17a1,1,0,0,1-2,0V5a1,1,0,0,1,2,0ZM8,2A3,3,0,0,0,5,5V19a3,3,0,0,0,6,0V5A3,3,0,0,0,8,2ZM9,19a1,1,0,0,1-2,0V5A1,1,0,0,1,9,5Z" /></svg>
                 </Link>
                 <div className="single-item__title">
-                    <h4><a href="#">{props.name}</a></h4>
+                    <h4><a href="#test">{props.name}</a></h4>
                     <span><a href="artist.html">{props.artist}</a></span>
                 </div>
                 <button onClick={handleOpenModal} className="single-item__add open-modal">

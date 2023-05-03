@@ -1,22 +1,41 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PlaylistList from '../components/Playlist/PlaylistList';
+import { getUploadedTracks } from '../redux/actions/tracks';
+import { useDispatch } from 'react-redux';
+import AddTrack from '../components/Modals/AddTrack';
 
 function TrackEditor() {
+    const dispatch = useDispatch()
+    const [isOpen, setIsOpen] = useState(false);
+    const [name, setName] = useState('')
+	const [image, setImage] = useState('')
+	const [artist, setArtist] = useState('')
+	const [genre, setGenre] = useState('')
+	const [album, setAlbum] = useState('')
+	const [mp3File, setMp3File] = useState(null)
     const [audio1, setAudio1] = useState({
         title: "Song 1",
         src: " "
     });
 
     const [output, setOutput] = useState({
-        src: "https://example.com/output.mp3"
+        title: "Output",
+        src: ""
     });
 
     const [audio2, setAudio2] = useState({
         title: "Song 2",
-        src: " "
+        src: ""
     });
 
-    const handleFileUpload = (event) => {
+    const handleOpenModal = () => {
+        // if output src is not empty
+        if (output.src !== "") {
+            setIsOpen(true);
+        }
+    };
+
+    const handleFileUpload = async (event) => {
         const files = event.target.files;
         const file1 = files[0];
         const file2 = files[1];
@@ -30,7 +49,34 @@ function TrackEditor() {
             title: file2.name,
             src: URL.createObjectURL(file2)
         });
+
+        const formData = new FormData();
+        for (let i = 0; i < files.length; i++) {
+            formData.append(`mp3Files`, files[i]);
+        }
+
+        const promise = dispatch(getUploadedTracks(formData));
+        promise.then(res => {
+            //const blobUrl = URL.createObjectURL(new Blob([res.data.mp3], { type: 'audio' }));
+            setName(res.data.name || '')
+			setArtist(res.data.artist || '')
+			setImage(res.data.Image || '')
+			setGenre(res.data.genre || '')
+			setAlbum(res.data.album || '')
+			setMp3File(res.data.mp3)
+            setOutput({
+                title: res.data.artist,
+                src: res.data.mp3
+            });
+        }).catch(error => {
+            console.log(error); // this will log any errors that occurred during the request
+        });
     };
+
+    useEffect(() => {
+        console.log(output.src)
+    }, [output]);
+
     return (
         <main className="main">
             <div className="container-fluid">
@@ -89,17 +135,23 @@ function TrackEditor() {
                                         </div>
                                     }
                                 </div>
-                                <div className="col-3">
-                                    <button className="sign__btn" type="button">Merge</button>
-                                </div>
                             </div>
                         </div>
 
-                        <div className="article" hidden>
-                            <div className="player__content">
-                                <audio src="http://blast.volkovdesign.com/audio/12071151_epic-cinematic-trailer_by_audiopizza_preview.mp3" id="audio2" controls></audio>
-                            </div>
+                        <div className="article">
+                            {output &&
+                                <div className="player__content">
+                                    <span className="player__track"><b className="player__title">{output.title}</b> – <span className="player__artist">AudioPizza</span></span>
+                                    <audio src={output.src} id="audio2" controls></audio>
+                                </div>
+                            }
                         </div>
+                        <div className="col-3">
+                            <button onClick={handleOpenModal} className="sign__btn" type="button">Save</button>
+                        </div>
+                        {isOpen && 
+                            <AddTrack name={name} artist={artist} image={image} album={album} genre={genre} mp3={mp3File} onCloseModal={() => setIsOpen(false)}/>
+                        }
                     </div>
                 </div>
             </div>

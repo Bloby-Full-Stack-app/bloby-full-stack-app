@@ -14,6 +14,17 @@ export const addTrack = (data) => {
   }
 };
 
+export const mergeTracks = (data) => {
+  return {
+    url: `http://localhost:8090/api/mergetracks`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      data,
+  }
+};
+
 export const uploadTrack = (data) => {
   return {
     url: `http://localhost:8090/api/uploadTrack`,

@@ -42,12 +42,12 @@ function Profile() {
 	};
 
 	const handleSubmit = async (event) => {
-		console.log(mp3File)
 		const formData = new FormData();
 		formData.append('name', name);
 		formData.append('artist', artist);
 		formData.append('genre', genre);
-		formData.append('Image', image);
+		formData.append('image', image);
+		formData.append('album', album);
 		formData.append('mp3', mp3File);
 		dispatch(createTrack(formData));
 	}
@@ -248,9 +248,9 @@ function Profile() {
 												</div>
 												<div className="release">
 													<div className="release__content">
-														<label className="sign__label" for="image">Cover</label>
+														<label className="sign__label">Cover</label>
 														<div className="release__cover">
-															<img src="assets/img/cover.png" alt="" onChange={e => setImage(e?.target?.src)} />
+															<img src={image} alt="" onChange={e => setImage(e?.target?.src)} />
 														</div>
 														<div className="release__stat">
 															<input id="mp3" name="mp3" type="file" accept="audio/mp3" onChange={handleMp3Upload} />
@@ -259,26 +259,26 @@ function Profile() {
 													<div className="release__list">
 														<div className="col-12">
 															<div className="sign__group">
-																<label className="sign__label" for="title">Title</label>
+																<label className="sign__label">Title</label>
 																<input id="title" type="text" name="title" className="sign__input" placeholder="Title" value={name} onChange={e => setName(e?.target?.value)} />
 															</div>
 														</div>
 														<div className="col-12">
 															<div className="sign__group">
-																<label className="sign__label" for="artist">Artist</label>
+																<label className="sign__label">Artist</label>
 																<input id="artist" type="text" name="artist" className="sign__input" placeholder="Artist" value={artist} onChange={e => setArtist(e?.target?.value)} />
 															</div>
 														</div>
 														<div className="col-12">
 															<div className="sign__group">
-																<label className="sign__label" for="genre">Genre</label>
+																<label className="sign__label">Genre</label>
 																<input id="genre" type="text" name="genre" className="sign__input" placeholder="Genre" value={genre} onChange={e => setGenre(e?.target?.value)} />
 															</div>
 														</div>
 														<div className="col-12">
 															<div className="sign__group">
-																<label className="sign__label" for="album">Album</label>
-																<input id="album" type="text" name="album" className="sign__input" placeholder="Genre" value={album} onChange={e => setAlbum(e?.target?.value)} />
+																<label className="sign__label">Album</label>
+																<input id="album" type="text" name="album" className="sign__input" placeholder="Album" value={album} onChange={e => setAlbum(e?.target?.value)} />
 															</div>
 														</div>
 
