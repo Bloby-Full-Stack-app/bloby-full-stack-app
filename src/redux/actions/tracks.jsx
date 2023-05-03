@@ -1,5 +1,5 @@
 import axios from '../../api/axios';
-import { addTrack, uploadTrack } from '../../api/endpoints/tracks';
+import { addTrack, mergeTracks, uploadTrack } from '../../api/endpoints/tracks';
 import api from '../../utils/api';
 import {
   API,
@@ -97,5 +97,23 @@ export const getTrack = trackId => async dispatch => {
       type: GET_SINGLE_TRACK_FAIL,
       payload: err.response.data.message,
     });
+  }
+};
+
+export const getUploadedTracks = data => async dispatch => {
+  try {
+    const res = await axios(mergeTracks(data))
+    await dispatch({
+      type: UPLOAD_TRACKS_SUCCESS,
+      payload: res.data.message,
+    });
+    return res.data;
+    //dispatch(setAlert(res.data.message, 'success'));
+  } catch (err) {
+    dispatch({
+      type: UPLOAD_TRACKS_FAIL,
+      payload: err.response.data.message,
+    });
+    //dispatch(setAlert(err.response.data.message, 'error'));
   }
 };

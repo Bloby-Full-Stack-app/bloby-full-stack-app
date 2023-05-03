@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { getUserPlaylists } from "../api/endpoints/playlist";
-import { addTrackToPlaylist } from "../redux/actions/playlist";
+import { getUserPlaylists } from "../../api/endpoints/playlist";
+import { addTrackToPlaylist } from "../../redux/actions/playlist";
 import { useDispatch } from "react-redux";
 
 const AddToPlayListModal = (props) => {
