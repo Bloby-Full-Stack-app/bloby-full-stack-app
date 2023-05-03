@@ -1,16 +1,33 @@
 import React, { useEffect, useState } from 'react'
 import Release from '../components/Releases'
 import UpcomingEvent from '../components/UpcomingEvent'
-import { useSelector } from 'react-redux';
 import Artist from '../components/Artist'
 import Track from '../components/Track/Track'
 import Podcast from '../components/Podcast'
 import Product from '../components/Product'
 import News from '../components/News'
 import TrackList from '../components/Track/TrackList'
+import { fetchTracks } from '../api/endpoints/tracks'
+import axios from 'axios'
 
 
 function Home () {
+	const [tracks, setTracks] = useState([]);
+
+	useEffect(() => {
+		const fetchTracksList = async () => {
+		  const res = await axios(fetchTracks());
+		  const { data } = res;
+	
+		  if (res.status === 200 || res.status === 201) {
+			setTracks(data?.data || []);
+		  } else {
+			// TODO: Handle error
+		  }
+		};
+	
+		fetchTracksList();
+	  }, []);
 	return (
 		<main className="main">
 			<div className="container-fluid">
@@ -122,7 +139,7 @@ function Home () {
 							</div>
 						</div>
 					</div>
-					<div className="col-12 col-md-6 col-xl-4">
+					<div className="col-12 col-md-6 col-xl-8">
 						<div className="row row--grid">
 							<div className="col-12">
 								<div className="main__title">
@@ -131,7 +148,7 @@ function Home () {
 							</div>
 							<div className="col-12">
 								<ul className="main__list">
-									<TrackList limit="4" />
+									<TrackList tracks={tracks} limit="5" />
 								</ul>
 							</div>
 						</div>

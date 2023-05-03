@@ -1,8 +1,22 @@
+const token = localStorage.getItem('_auth');
+
 export const fetchTracks = params => {
   return {
     url: `http://localhost:8090/api/fetchtracks`,
     method: 'GET',
     params,
+  };
+};
+
+export const fetchLikedTracks = params => {
+  return {
+    url: `http://localhost:8090/api/fetchlikedtracks`,
+    method: 'GET',
+    params,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `${token}`,
+    },
   };
 };
 
@@ -40,6 +54,14 @@ export const getTrack = ({ id, params }) => {
   return {
     url: `http://localhost:8090/api/getTrack/${id}`,
     method: 'GET',
+    params,
+  };
+};
+
+export const likeUnlikeTrack = ( id, params ) => {
+  return {
+    url: `http://localhost:8090/api/likeTrack/${id}`,
+    method: 'POST',
     params,
   };
 };

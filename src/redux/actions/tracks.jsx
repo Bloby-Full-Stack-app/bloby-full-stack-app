@@ -1,5 +1,5 @@
 import axios from '../../api/axios';
-import { addTrack, mergeTracks, uploadTrack } from '../../api/endpoints/tracks';
+import { addTrack, likeUnlikeTrack, mergeTracks, uploadTrack } from '../../api/endpoints/tracks';
 import api from '../../utils/api';
 import {
   API,
@@ -7,9 +7,10 @@ import {
   GET_SINGLE_TRACK_SUCCESS,
   GET_TRACKS_FAIL,
   GET_TRACKS_SUCCESS,
+  LIKE_TRACK_FAIL,
+  LIKE_TRACK_SUCCESS,
   POST_TRACKS_FAIL,
   POST_TRACKS_SUCCESS,
-  UPDATE_TRACKS_SUCCESS,
   UPLOAD_TRACKS_FAIL,
   UPLOAD_TRACKS_SUCCESS,
 } from '../constants.jsx';
@@ -19,13 +20,6 @@ const token = localStorage.getItem('_auth');
 const config = {
   headers: {
     'Content-Type': 'application/json',
-    Authorization: `${token}`,
-  },
-};
-
-const configFile = {
-  headers: {
-    'Content-Type': 'multipart/form-data',
     Authorization: `${token}`,
   },
 };
@@ -112,6 +106,25 @@ export const getUploadedTracks = data => async dispatch => {
   } catch (err) {
     dispatch({
       type: UPLOAD_TRACKS_FAIL,
+      payload: err.response.data.message,
+    });
+    //dispatch(setAlert(err.response.data.message, 'error'));
+  }
+};
+
+export const likeTrack = trackId => async dispatch => {
+  try {
+    const res = await axios(likeUnlikeTrack(trackId))
+    
+    await dispatch({
+      type: LIKE_TRACK_SUCCESS,
+      payload: res.data.message,
+    });
+    return res.data;
+    //dispatch(setAlert(res.data.message, 'success'));
+  } catch (err) {
+    dispatch({
+      type: LIKE_TRACK_FAIL,
       payload: err.response.data.message,
     });
     //dispatch(setAlert(err.response.data.message, 'error'));

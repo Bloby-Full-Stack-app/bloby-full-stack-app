@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
+import { useIsAuthenticated } from 'react-auth-kit';
 import { Link, useLocation } from "react-router-dom"
 
 function Sidebar() {
-
+    const isAuthenticated = useIsAuthenticated();
+    const auth = isAuthenticated();
     const location = useLocation();
     const { activeLink, setActiveLink } = useState(location.pathname.slice(1));
 
     const handleLinkClick = (link) => {
         setActiveLink(link.slice(1));
     };
-
     return (
         <div className="sidebar">
             <div className="sidebar__logo">
@@ -28,6 +29,7 @@ function Sidebar() {
                 <li className="sidebar__nav-item">
                     <Link to="/releases" onClick={() => handleLinkClick('/releases')} className={activeLink === 'releases' ? 'sidebar__nav-link sidebar__nav-link--active' : 'sidebar__nav-link'}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.65,2.24a1,1,0,0,0-.8-.23l-13,2A1,1,0,0,0,7,5V15.35A3.45,3.45,0,0,0,5.5,15,3.5,3.5,0,1,0,9,18.5V10.86L20,9.17v4.18A3.45,3.45,0,0,0,18.5,13,3.5,3.5,0,1,0,22,16.5V3A1,1,0,0,0,21.65,2.24ZM5.5,20A1.5,1.5,0,1,1,7,18.5,1.5,1.5,0,0,1,5.5,20Zm13-2A1.5,1.5,0,1,1,20,16.5,1.5,1.5,0,0,1,18.5,18ZM20,7.14,9,8.83v-3L20,4.17Z" /></svg> <span>Releases</span></Link>
                 </li>
+                {auth ? (
                 <li className="sidebar__nav-item">
                     <a className="sidebar__nav-link" data-toggle="collapse" href="#collapseMenu1" role="button" aria-expanded="false" aria-controls="collapseMenu1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,5.5H12.72l-.32-1a3,3,0,0,0-2.84-2H5a3,3,0,0,0-3,3v13a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V8.5A3,3,0,0,0,19,5.5Zm1,13a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V5.5a1,1,0,0,1,1-1H9.56a1,1,0,0,1,.95.68l.54,1.64A1,1,0,0,0,12,7.5h7a1,1,0,0,1,1,1Z" /></svg> <span>Track editor</span> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17,9.17a1,1,0,0,0-1.41,0L12,12.71,8.46,9.17a1,1,0,0,0-1.41,0,1,1,0,0,0,0,1.42l4.24,4.24a1,1,0,0,0,1.42,0L17,10.59A1,1,0,0,0,17,9.17Z" /></svg></a>
                     <div className="collapse" id="collapseMenu1">
@@ -44,6 +46,10 @@ function Sidebar() {
                         </ul>
                     </div>
                 </li>
+                ) : (
+					<>
+					</>
+				)}
             </ul>
         </div>
     )

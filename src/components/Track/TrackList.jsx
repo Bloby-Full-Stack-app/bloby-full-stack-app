@@ -1,57 +1,66 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Track from './Track';
-import { fetchTracks } from '../../api/endpoints/tracks';
+import { fetchLikedTracks } from '../../api/endpoints/tracks';
 import axios from '../../api/axios';
-import { useSearchParams } from 'react-router-dom';
-import AddToPlaylistModal from '../Modals/AddToPlayListModal';
+import { useDispatch } from 'react-redux';
+import { likeTrack } from '../../redux/actions/tracks';
 
-function TrackList() {
-  const [tracks, setTracks] = useState([]);
+function TrackList({ tracks, inPlaylist }) {
+  const dispatch = useDispatch();
+  
+  const [likedTracks, setLikedTracks] = useState([]);
 
   useEffect(() => {
-    let loaded = false;
-    const getTracksList = async () => {
-      const promise = axios(
-        fetchTracks()
-      );
-
-      const res = await promise;
+    const fetchLikedTracksList = async () => {
+      const res = await axios(fetchLikedTracks());
       const { data } = res;
+
       if (res.status === 200 || res.status === 201) {
-        try {
-          setTracks(data?.data || []);
-        } catch { }
+        setLikedTracks(data?.data?.map(track => track._id) || []);
       } else {
-        // TODO: Handle tracks loading error
+        // TODO: Handle error
       }
     };
 
-    console.log(tracks.length);
-
-    if (tracks.length === 0 && !loaded) {
-      getTracksList();
-    }
-    return () => {
-      loaded = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchLikedTracksList();
   }, []);
+
+  const handleLikeTrack = (trackId) => {
+    return async (event) => {
+      event.preventDefault();
+
+      const promise = dispatch(likeTrack(trackId));
+
+      promise.then(res => {
+        const updatedLikedTracks = res.isLiked
+          ? [...likedTracks, trackId]
+          : likedTracks.filter(id => id !== trackId);
+
+        setLikedTracks(updatedLikedTracks);
+      });
+    };
+  };
 
   return (
     <div>
-      {tracks.slice(0,5).map(track => (
-          <Track
-            key={track._id}
-            id={track._id}
-            name={track.name}
-            artist={track.artist}
-            album={track.album}
-            length="3:44"
-          />
+      {tracks.slice(0, 5).map(track => (
+        <Track
+          key={track._id}
+          id={track._id}
+          name={track.name}
+          Image={track.Image}
+          artist={track.artist}
+          album={track.album}
+          handleLikeTrack={handleLikeTrack(track._id)}
+          isLiked={likedTracks.includes(track._id)}
+          inPlaylist={inPlaylist}
+          length="3:44"
+        />
       ))}
-      
     </div>
   );
 }
+
+
 
 export default TrackList;
