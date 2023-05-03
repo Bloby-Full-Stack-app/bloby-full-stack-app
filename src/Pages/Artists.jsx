@@ -48,9 +48,9 @@ function Artists() {
 							</div>
 
 							<div className="slider-radio">
-								<input type="radio" name="grade" id="featured" checked="checked" /><label for="featured">Featured</label>
-								<input type="radio" name="grade" id="popular" /><label for="popular">Popular</label>
-								<input type="radio" name="grade" id="newest" /><label for="newest">Newest</label>
+								<input type="radio" name="grade" id="featured" /><label>Featured</label>
+								<input type="radio" name="grade" id="popular" /><label>Popular</label>
+								<input type="radio" name="grade" id="newest" /><label>Newest</label>
 							</div>
 						</div>
 

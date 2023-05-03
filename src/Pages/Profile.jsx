@@ -4,14 +4,16 @@ import Track from '../components/Track/Track';
 import { createTrack, getUploadedTrack } from '../redux/actions/tracks';
 import { useDispatch } from 'react-redux';
 import { useSignOut } from 'react-auth-kit'
-import { getCurrentUserPlaylists } from '../redux/actions/playlist';
 import { getUserPlaylists } from '../api/endpoints/playlist';
 import axios from 'axios';
 import PlaylistList from '../components/Playlist/PlaylistList';
+import TrackList from '../components/Track/TrackList';
+import { fetchLikedTracks } from '../api/endpoints/tracks';
 
 function Profile() {
 	const user = JSON.parse(localStorage.getItem("_auth_state"));
 	const dispatch = useDispatch()
+	const [likedTracks, setLikedTracks] = useState([])
 	const [name, setName] = useState('')
 	const [image, setImage] = useState('')
 	const [artist, setArtist] = useState('')
@@ -65,7 +67,20 @@ function Profile() {
         getCurrentUserPlaylists();
     }, []);
 
-	
+	const fetchLikedTracksList = async () => {
+		const res = await axios(fetchLikedTracks());
+		const { data } = res;
+  
+		if (res.status === 200 || res.status === 201) {
+		  setLikedTracks(data?.data || []);
+		} else {
+		  // TODO: Handle error
+		}
+	  };
+
+	useEffect(() => {
+		fetchLikedTracksList();
+	  }, []);
 
 	return (
 		<main className="main">
@@ -163,26 +178,14 @@ function Profile() {
 												<h3><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.65,2.24a1,1,0,0,0-.8-.23l-13,2A1,1,0,0,0,7,5V15.35A3.45,3.45,0,0,0,5.5,15,3.5,3.5,0,1,0,9,18.5V10.86L20,9.17v4.18A3.45,3.45,0,0,0,18.5,13,3.5,3.5,0,1,0,22,16.5V3A1,1,0,0,0,21.65,2.24ZM5.5,20A1.5,1.5,0,1,1,7,18.5,1.5,1.5,0,0,1,5.5,20Zm13-2A1.5,1.5,0,1,1,20,16.5,1.5,1.5,0,0,1,18.5,18ZM20,7.14,9,8.83v-3L20,4.17Z" /></svg>Liked tracks</h3>
 
 												<div className="dashbox__wrap">
-													<a className="dashbox__refresh" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10,0,0,0,5.12,4.77V3a1,1,0,0,0-2,0V7.5a1,1,0,0,0,1,1H8.62a1,1,0,0,0,0-2H6.22A8,8,0,1,1,4,12a1,1,0,0,0-2,0A10,10,0,1,0,12,2Zm0,6a1,1,0,0,0-1,1v3a1,1,0,0,0,1,1h2a1,1,0,0,0,0-2H13V9A1,1,0,0,0,12,8Z" /></svg></a>
+													<button className="dashbox__refresh" onClick={fetchLikedTracksList}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10,0,0,0,5.12,4.77V3a1,1,0,0,0-2,0V7.5a1,1,0,0,0,1,1H8.62a1,1,0,0,0,0-2H6.22A8,8,0,1,1,4,12a1,1,0,0,0-2,0A10,10,0,1,0,12,2Zm0,6a1,1,0,0,0-1,1v3a1,1,0,0,0,1,1h2a1,1,0,0,0,0-2H13V9A1,1,0,0,0,12,8Z" /></svg></button>
 													<a className="dashbox__more" href="#">View All</a>
 												</div>
 											</div>
 
 											<div className="dashbox__list-wrap">
 												<ul className="main__list main__list--dashbox">
-													{user.likedTracks.length === 0 ?
-														<p>No liked tracks</p> :
-														user.likedTracks.map(track => (
-															<Track
-																key={track._id}
-																id={track._id}
-																name={track.name}
-																artist={track.artist}
-																Image={track.Image}
-																length={track.length}
-															/>
-														))
-													}
+													<TrackList tracks={likedTracks} />
 
 												</ul>
 											</div>
@@ -304,28 +307,28 @@ function Profile() {
 
 												<div className="col-12 col-md-6 col-lg-12 col-xl-6">
 													<div className="sign__group">
-														<label className="sign__label" for="username">Login</label>
+														<label className="sign__label">Login</label>
 														<input id="username" type="text" name="username" className="sign__input" placeholder="User123" />
 													</div>
 												</div>
 
 												<div className="col-12 col-md-6 col-lg-12 col-xl-6">
 													<div className="sign__group">
-														<label className="sign__label" for="email">Email</label>
+														<label className="sign__label">Email</label>
 														<input id="email" type="text" name="email" className="sign__input" placeholder="email@email.com" />
 													</div>
 												</div>
 
 												<div className="col-12 col-md-6 col-lg-12 col-xl-6">
 													<div className="sign__group">
-														<label className="sign__label" for="firstname">First name</label>
+														<label className="sign__label">First name</label>
 														<input id="firstname" type="text" name="firstname" className="sign__input" placeholder="John" />
 													</div>
 												</div>
 
 												<div className="col-12 col-md-6 col-lg-12 col-xl-6">
 													<div className="sign__group">
-														<label className="sign__label" for="lastname">Last name</label>
+														<label className="sign__label">Last name</label>
 														<input id="lastname" type="text" name="lastname" className="sign__input" placeholder="Doe" />
 													</div>
 												</div>
@@ -346,28 +349,28 @@ function Profile() {
 
 												<div className="col-12 col-md-6 col-lg-12 col-xl-6">
 													<div className="sign__group">
-														<label className="sign__label" for="oldpass">Old password</label>
+														<label className="sign__label">Old password</label>
 														<input id="oldpass" type="password" name="oldpass" className="sign__input" />
 													</div>
 												</div>
 
 												<div className="col-12 col-md-6 col-lg-12 col-xl-6">
 													<div className="sign__group">
-														<label className="sign__label" for="newpass">New password</label>
+														<label className="sign__label">New password</label>
 														<input id="newpass" type="password" name="newpass" className="sign__input" />
 													</div>
 												</div>
 
 												<div className="col-12 col-md-6 col-lg-12 col-xl-6">
 													<div className="sign__group">
-														<label className="sign__label" for="confirmpass">Confirm new password</label>
+														<label className="sign__label">Confirm new password</label>
 														<input id="confirmpass" type="password" name="confirmpass" className="sign__input" />
 													</div>
 												</div>
 
 												<div className="col-12 col-md-6 col-lg-12 col-xl-6">
 													<div className="sign__group">
-														<label className="sign__label" for="select">Select</label>
+														<label className="sign__label">Select</label>
 														<select name="select" id="select" className="sign__select">
 															<option value="0">Option</option>
 															<option value="1">Option 2</option>

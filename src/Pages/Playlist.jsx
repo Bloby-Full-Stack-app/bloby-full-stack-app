@@ -76,8 +76,10 @@ function Playlist() {
                                         <Track
                                             key={track._id}
                                             id={track._id}
+                                            Image={track.Image}
                                             name={track.name}
                                             artist={track.artist}
+                                            inPlaylist={true}
                                             length="3:44"
                                         />
                                     ))}
