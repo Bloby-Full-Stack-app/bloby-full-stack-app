@@ -43,7 +43,7 @@ function TrackList({ tracks, inPlaylist }) {
 
   return (
     <div>
-      {tracks.slice(0, 5).map(track => (
+      {tracks.map(track => (
         <Track
           key={track._id}
           id={track._id}

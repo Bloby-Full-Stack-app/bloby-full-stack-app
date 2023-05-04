@@ -25,6 +25,10 @@ export const addTrack = (data) => {
     url: `http://localhost:8090/api/addtrack`,
     method: 'POST',
     data,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `${token}`,
+    },
   }
 };
 
@@ -63,5 +67,17 @@ export const likeUnlikeTrack = ( id, params ) => {
     url: `http://localhost:8090/api/likeTrack/${id}`,
     method: 'POST',
     params,
+  };
+};
+
+export const fetchCurrentUserReleases = params => {
+  return {
+    url: `http://localhost:8090/api/getCurrentUserReleases`,
+    method: 'GET',
+    params,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `${token}`,
+    },
   };
 };

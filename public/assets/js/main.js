@@ -433,6 +433,13 @@ $(document).ready(function () {
 
 	var audio = $('#audio2');
 
+	var player = new Plyr('#audio3', {
+		controls,
+		volume: 0.5,
+	});
+
+	var audio = $('#audio3');
+
 	player.on('play', event => {
 		$('a[data-link].active, a[data-playlist].active').addClass('play');
 		$('a[data-link].active, a[data-playlist].active').removeClass('pause');

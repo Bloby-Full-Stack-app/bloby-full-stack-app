@@ -147,8 +147,8 @@ function Home () {
 								</div>
 							</div>
 							<div className="col-12">
-								<ul className="main__list">
-									<TrackList tracks={tracks} limit="5" />
+								<ul className="main__list dashbox__scroll">
+									<TrackList tracks={tracks}  />
 								</ul>
 							</div>
 						</div>

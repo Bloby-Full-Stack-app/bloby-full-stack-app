@@ -25,6 +25,19 @@ export const getUserPlaylists = params => {
     };
   };
 
+  export const removeTracksFromPlaylist = ( trackId, data, params ) => {
+    return {
+      url: `http://localhost:8090/api/removeTrackFromPlaylist/${trackId}`,
+      method: 'POST',
+      params,
+      data,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${token}`,
+      },
+    };
+  };
+
   export const getPlaylistById = ({playlistId, params}) => {
     return {
       url: `http://localhost:8090/api/getPlaylist/${playlistId}`,

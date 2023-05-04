@@ -8,6 +8,7 @@ const AddToPlayListModal = (props) => {
     const dispatch = useDispatch();
     const [playlists, setPlaylists] = useState([]);
     const [playlistName, setPlaylistName] = useState('')
+    const [playlistId, setPlaylistId] = useState('')
     const formData = new FormData();
 
     useEffect(() => {
@@ -23,14 +24,20 @@ const AddToPlayListModal = (props) => {
         getCurrentUserPlaylists();
     }, []);
 
+    const  handlePlaylistChange = (event) => {
+        const playlistName = event.target.value;
+        const selectedPlaylist = playlists.find(p => p.name === playlistName);
+        setPlaylistName(selectedPlaylist?.name || "");
+        setPlaylistId(selectedPlaylist?._id || "");
+    }
+
     const handleAddToPlaylist = (event) => {
         event.preventDefault();
-		formData.append('playlistName', playlistName);
-        // console log formData data
-        console.log(formData.get('playlistName'))
 		dispatch(addTrackToPlaylist(props.trackId, {
+            playlistId: playlistId,
             playlistName: playlistName
         }));
+        console.log(playlistId);
         //onAddToPlaylist(playlistId);
         props.onCloseModal();
     };
@@ -54,7 +61,7 @@ const AddToPlayListModal = (props) => {
                                         className="sign__select"
                                         name="playlistName"
                                         id="playlistName"
-                                        onChange={e => setPlaylistName(e?.target?.value)}
+                                        onChange={handlePlaylistChange}
                                     >
                                         <option value="">Select a playlist</option>
                                         {playlists.map((playlist) => (

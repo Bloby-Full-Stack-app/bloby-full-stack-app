@@ -3,6 +3,8 @@ import {
     GET_CURRENT_USER_PLAYLISTS_SUCCESS,
     POST_ADD_TRACK_TO_PLAYLIST_FAIL,
     POST_ADD_TRACK_TO_PLAYLIST_SUCCESS,
+    REMOVE_TRACK_FROM_PLAYLIST_FAIL,
+    REMOVE_TRACK_FROM_PLAYLIST_SUCCESS,
   } from '../constants.jsx';
   
   const initialState = {
@@ -24,6 +26,8 @@ import {
       case GET_CURRENT_USER_PLAYLISTS_FAIL:
       case POST_ADD_TRACK_TO_PLAYLIST_SUCCESS:
       case POST_ADD_TRACK_TO_PLAYLIST_FAIL:
+      case REMOVE_TRACK_FROM_PLAYLIST_SUCCESS:
+      case REMOVE_TRACK_FROM_PLAYLIST_FAIL:
       default:
         return state;
     }

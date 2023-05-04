@@ -8,7 +8,7 @@ import { getUserPlaylists } from '../api/endpoints/playlist';
 import axios from 'axios';
 import PlaylistList from '../components/Playlist/PlaylistList';
 import TrackList from '../components/Track/TrackList';
-import { fetchLikedTracks } from '../api/endpoints/tracks';
+import { fetchCurrentUserReleases, fetchLikedTracks } from '../api/endpoints/tracks';
 
 function Profile() {
 	const user = JSON.parse(localStorage.getItem("_auth_state"));
@@ -21,6 +21,7 @@ function Profile() {
 	const [album, setAlbum] = useState('')
 	const [mp3File, setMp3File] = useState(null)
 	const [playlists, setPlaylists] = useState([]);
+	const [currentUserReleases, setCurrentUserReleases] = useState([]);
 
 	const signOut = useSignOut()
 
@@ -55,32 +56,44 @@ function Profile() {
 	}
 
 	useEffect(() => {
-        const getCurrentUserPlaylists = async () => {
-            try {
-                const response = await axios(getUserPlaylists());
-                const { data } = response;
-                setPlaylists(data?.data || []);
-            } catch (error) {
-                console.log("Error loading playlists:", error);
-            }
-        };
-        getCurrentUserPlaylists();
-    }, []);
+		const getCurrentUserPlaylists = async () => {
+			try {
+				const response = await axios(getUserPlaylists());
+				const { data } = response;
+				setPlaylists(data?.data || []);
+			} catch (error) {
+				console.log("Error loading playlists:", error);
+			}
+		};
+
+		const getCurrentUserReleases = async () => {
+			try {
+				const response = await axios(fetchCurrentUserReleases());
+				const { data } = response;
+				setCurrentUserReleases(data?.data || []);
+			} catch (error) {
+				console.log("Error loading releases:", error);
+			}
+		};
+
+		getCurrentUserReleases();
+		getCurrentUserPlaylists();
+	}, []);
 
 	const fetchLikedTracksList = async () => {
 		const res = await axios(fetchLikedTracks());
 		const { data } = res;
-  
+
 		if (res.status === 200 || res.status === 201) {
-		  setLikedTracks(data?.data || []);
+			setLikedTracks(data?.data || []);
 		} else {
-		  // TODO: Handle error
+			// TODO: Handle error
 		}
-	  };
+	};
 
 	useEffect(() => {
 		fetchLikedTracksList();
-	  }, []);
+	}, []);
 
 	return (
 		<main className="main">
@@ -133,45 +146,8 @@ function Profile() {
 
 						<div className="tab-content">
 							<div className="tab-pane fade show active" id="tab-1" role="tabpanel">
-								<div className="row row--grid">
-									<div className="col-12 col-lg-6 col-xl-3">
-										<div className="stats">
-											<span>My balance <a href="#modal-topup" className="open-modal">top up</a></span>
-											<p><b>$90.99</b></p>
-											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6,11a1,1,0,1,0,1,1A1,1,0,0,0,6,11Zm12,0a1,1,0,1,0,1,1A1,1,0,0,0,18,11Zm2-6H4A3,3,0,0,0,1,8v8a3,3,0,0,0,3,3H20a3,3,0,0,0,3-3V8A3,3,0,0,0,20,5Zm1,11a1,1,0,0,1-1,1H4a1,1,0,0,1-1-1V8A1,1,0,0,1,4,7H20a1,1,0,0,1,1,1ZM12,9a3,3,0,1,0,3,3A3,3,0,0,0,12,9Zm0,4a1,1,0,1,1,1-1A1,1,0,0,1,12,13Z" /></svg>
-										</div>
-									</div>
-
-									<div className="col-12 col-lg-6 col-xl-3">
-										<div className="stats">
-											<span>Premium plan</span>
-											<p><b>$39.99</b>/month</p>
-											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9,10a1,1,0,0,0-1,1v2a1,1,0,0,0,2,0V11A1,1,0,0,0,9,10Zm12,1a1,1,0,0,0,1-1V6a1,1,0,0,0-1-1H3A1,1,0,0,0,2,6v4a1,1,0,0,0,1,1,1,1,0,0,1,0,2,1,1,0,0,0-1,1v4a1,1,0,0,0,1,1H21a1,1,0,0,0,1-1V14a1,1,0,0,0-1-1,1,1,0,0,1,0-2ZM20,9.18a3,3,0,0,0,0,5.64V17H10a1,1,0,0,0-2,0H4V14.82A3,3,0,0,0,4,9.18V7H8a1,1,0,0,0,2,0H20Z" /></svg>
-										</div>
-									</div>
-
-									<div className="col-12 col-lg-6 col-xl-3">
-										<div className="stats">
-											<span>Minutes listened</span>
-											<p><b>407 021</b></p>
-											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,13.18V11A8,8,0,0,0,4,11v2.18A3,3,0,0,0,2,16v2a3,3,0,0,0,3,3H8a1,1,0,0,0,1-1V14a1,1,0,0,0-1-1H6V11a6,6,0,0,1,12,0v2H16a1,1,0,0,0-1,1v6a1,1,0,0,0,1,1h3a3,3,0,0,0,3-3V16A3,3,0,0,0,20,13.18ZM7,15v4H5a1,1,0,0,1-1-1V16a1,1,0,0,1,1-1Zm13,3a1,1,0,0,1-1,1H17V15h2a1,1,0,0,1,1,1Z" /></svg>
-										</div>
-									</div>
-
-									<div className="col-12 col-lg-6 col-xl-3">
-										<div className="stats">
-											<span>Promo code</span>
-
-											<form action="#" className="stats__form">
-												<input type="text" placeholder="__-__-__-__" />
-												<button type="button">send</button>
-											</form>
-										</div>
-									</div>
-								</div>
 
 								<div className="row row--grid">
-
 									<div className="col-12 col-lg-6">
 										<div className="dashbox">
 											<div className="dashbox__title">
@@ -184,9 +160,8 @@ function Profile() {
 											</div>
 
 											<div className="dashbox__list-wrap">
-												<ul className="main__list main__list--dashbox">
+												<ul className="main__list main__list--dashbox dashbox__scroll">
 													<TrackList tracks={likedTracks} />
-
 												</ul>
 											</div>
 										</div>
@@ -203,7 +178,7 @@ function Profile() {
 											</div>
 
 											<div className="dashbox__list-wrap">
-												<ul className="main__list main__list--dashbox">
+												<ul className="main__list main__list--dashbox dashbox__scroll">
 													<PlaylistList />
 												</ul>
 											</div>
@@ -216,7 +191,7 @@ function Profile() {
 								<div className="col-12">
 									<div className="dashbox">
 										<div className="dashbox__title">
-											<h3><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.65,2.24a1,1,0,0,0-.8-.23l-13,2A1,1,0,0,0,7,5V15.35A3.45,3.45,0,0,0,5.5,15,3.5,3.5,0,1,0,9,18.5V10.86L20,9.17v4.18A3.45,3.45,0,0,0,18.5,13,3.5,3.5,0,1,0,22,16.5V3A1,1,0,0,0,21.65,2.24ZM5.5,20A1.5,1.5,0,1,1,7,18.5,1.5,1.5,0,0,1,5.5,20Zm13-2A1.5,1.5,0,1,1,20,16.5,1.5,1.5,0,0,1,18.5,18ZM20,7.14,9,8.83v-3L20,4.17Z" /></svg></h3>
+											<h3><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.65,2.24a1,1,0,0,0-.8-.23l-13,2A1,1,0,0,0,7,5V15.35A3.45,3.45,0,0,0,5.5,15,3.5,3.5,0,1,0,9,18.5V10.86L20,9.17v4.18A3.45,3.45,0,0,0,18.5,13,3.5,3.5,0,1,0,22,16.5V3A1,1,0,0,0,21.65,2.24ZM5.5,20A1.5,1.5,0,1,1,7,18.5,1.5,1.5,0,0,1,5.5,20Zm13-2A1.5,1.5,0,1,1,20,16.5,1.5,1.5,0,0,1,18.5,18ZM20,7.14,9,8.83v-3L20,4.17Z" /></svg>Your Releases</h3>
 
 											<div className="dashbox__wrap">
 												<a className="dashbox__refresh" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10,0,0,0,5.12,4.77V3a1,1,0,0,0-2,0V7.5a1,1,0,0,0,1,1H8.62a1,1,0,0,0,0-2H6.22A8,8,0,1,1,4,12a1,1,0,0,0-2,0A10,10,0,1,0,12,2Zm0,6a1,1,0,0,0-1,1v3a1,1,0,0,0,1,1h2a1,1,0,0,0,0-2H13V9A1,1,0,0,0,12,8Z" /></svg></a>
@@ -225,17 +200,8 @@ function Profile() {
 										</div>
 
 										<div className="dashbox__list-wrap">
-											<ul className="main__list main__list--dashbox">
-												{user.releases.map(track => (
-													<Track
-														key={track.id}
-														name={track.name}
-														artist={track.artist}
-														Image={track.Image}
-														length={track.length}
-													//onClick={() => handleClick(track)}
-													/>
-												))}
+											<ul className="main__list main__list--dashbox dashbox__scroll">
+												<TrackList tracks={currentUserReleases} />
 											</ul>
 										</div>
 									</div>

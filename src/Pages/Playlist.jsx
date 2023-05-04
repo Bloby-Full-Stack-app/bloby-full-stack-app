@@ -6,13 +6,19 @@ import Track from '../components/Track/Track';
 import Comment from '../components/Comment/Comment';
 import { addCommentToPlaylist } from '../redux/actions/comment';
 import { useDispatch } from 'react-redux';
+import { removeTrackFromPlaylist } from '../redux/actions/playlist';
+import TrackList from '../components/Track/TrackList';
 
 function Playlist() {
+    const user = JSON.parse(localStorage.getItem("_auth_state"));
     const { playlistId } = useParams();
     const dispatch = useDispatch();
     const [playlist, setPlaylist] = useState(null);
+    const [playlistTracks, setPlaylistTracks] = useState([])
     const [comments, setComments] = useState([]);
     const [content, setContent] = useState("");
+    const [belongsToCurrentUser, setBelongsToCurrentUser] = useState(false);
+    // check if the playlist belongs to the current user
     useEffect(() => {
         const getPlaylist = async () => {
             const promise = axios(getPlaylistById({ playlistId }));
@@ -21,6 +27,7 @@ function Playlist() {
             if (res.status === 200 || res.status === 201) {
                 try {
                     setPlaylist(data?.data || {});
+                    setPlaylistTracks(data?.data.tracks || []);
                     setComments(data?.data?.comments || []);
                 } catch {
 
@@ -33,7 +40,26 @@ function Playlist() {
         if (playlistId && !playlist) {
             getPlaylist();
         }
-    }, [playlistId, playlist, comments, content]);
+
+        if (playlist) {
+            setBelongsToCurrentUser(playlist.createdBy._id === user._id);
+        }
+
+    }, [playlist, playlistTracks, playlistId, belongsToCurrentUser, comments, content]);
+
+    const handleRemoveTrackFromPlaylist = (trackId) => {
+        return async (event) => {
+            event.preventDefault();
+            const promise = dispatch(removeTrackFromPlaylist(trackId, {
+                playlistId: playlistId,
+            }));
+
+            promise.then(res => {
+                setPlaylistTracks(res.data.tracks)
+                setPlaylist(res.data)
+            });
+        };
+    };
 
     const handleComment = async (event) => {
         event.preventDefault();
@@ -72,14 +98,17 @@ function Playlist() {
 
                             <div className="release__list">
                                 {playlist && <ul className="main__list main__list--playlist main__list--dashbox">
-                                    {playlist.tracks.map(track => (
+                                    {playlistTracks.map(track => (
                                         <Track
                                             key={track._id}
                                             id={track._id}
-                                            Image={track.Image}
                                             name={track.name}
+                                            Image={track.Image}
                                             artist={track.artist}
+                                            album={track.album}
                                             inPlaylist={true}
+                                            belongsToCurrentUser={belongsToCurrentUser}
+                                            handleRemoveTrack={handleRemoveTrackFromPlaylist(track._id)}
                                             length="3:44"
                                         />
                                     ))}
