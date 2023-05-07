@@ -160,7 +160,7 @@ function Profile() {
 											</div>
 
 											<div className="dashbox__list-wrap">
-												<ul className="main__list main__list--dashbox dashbox__scroll">
+												<ul className="main__list main__list--dashbox">
 													<TrackList tracks={likedTracks} />
 												</ul>
 											</div>

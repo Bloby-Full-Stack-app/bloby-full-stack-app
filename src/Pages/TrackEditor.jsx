@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import PlaylistList from '../components/Playlist/PlaylistList';
 import { getUploadedTracks } from '../redux/actions/tracks';
 import { useDispatch } from 'react-redux';
 import AddTrack from '../components/Modals/AddTrack';
 import { fetchCurrentUserReleases, fetchLikedTracks } from '../api/endpoints/tracks';
 import axios from 'axios';
 import TrackList from '../components/Track/TrackList';
-import Track from '../components/Track/Track';
+import Waveform from '../components/Waveform';
+import { FaRegTimesCircle, FaVolumeUp, FaRegClock } from 'react-icons/fa'
+import FadeInInput from '../components/inputRange/FadeInInput';
+import FadeOutInput from '../components/inputRange/FadeOutInput';
+import PitchInput from '../components/inputRange/PitchInput';
+import SpeedInput from '../components/inputRange/SpeedInput';
+import VolumeInput from '../components/inputRange/VolumeInput';
 
 function TrackEditor() {
     const dispatch = useDispatch()
@@ -19,20 +24,67 @@ function TrackEditor() {
     const [mp3File, setMp3File] = useState(null)
     const [currentUserReleases, setCurrentUserReleases] = useState([]);
     const [likedTracks, setLikedTracks] = useState([])
+    const [files, setFiles] = useState(null);
     const [audio1, setAudio1] = useState({
-        title: "Song 1",
-        src: ""
+        title: "",
+        src: "",
+        file: null
     });
 
     const [output, setOutput] = useState({
-        title: "Output",
+        title: "",
         src: ""
     });
 
     const [audio2, setAudio2] = useState({
-        title: "Song 2",
-        src: ""
+        title: "",
+        src: "",
+        file: null
     });
+
+    const [selected, setSelected] = useState("fadein");
+    const [volume, setVolume] = useState(50);
+    const [fadeIn, setFadeIn] = useState(0);
+    const [fadeOut, setFadeOut] = useState(0);
+    const [pitch, setPitch] = useState(1);
+    const [speed, setSpeed] = useState(1);
+    const handleVolumeChange = (value) => {
+        setVolume(value);
+      };
+    const handleFadeInChange = (value) => {
+        setFadeIn(value);
+    };
+    const handleFadeOutChange = (value) => {
+        setFadeOut(value);
+    };
+    const handlePitchChange = (value) => {
+        setPitch(value);
+    };
+    const handleSpeedChange = (value) => {
+        setSpeed(value);
+    };
+
+    const renderEffectInput = () => {
+        switch (selected) {
+          case "fadein":
+            return <FadeInInput fadeIn={fadeIn} onFadeInChange={handleFadeInChange} />;
+        case "fadeout":
+            return <FadeOutInput fadeOut={fadeOut} onFadeOutChange={handleFadeOutChange} />;
+        case "pitch":
+            return <PitchInput pitch={pitch} onPitchChange={handlePitchChange} />
+        case "speed":
+            return <SpeedInput speed={speed} onSpeedChange={handleSpeedChange} />
+        case "volume":
+            return <VolumeInput volume={volume} onVolumeChange={handleVolumeChange} />
+          
+          default:
+            return null;
+        }
+      };
+
+    const handleRadioClick = (event) => {
+        setSelected(event.target.id);
+    }
 
     const handleOpenModal = () => {
         // if output src is not empty
@@ -47,43 +99,80 @@ function TrackEditor() {
         const file2 = files[1];
 
         setAudio1({
-            title: file1?.name,
-            src: URL.createObjectURL(file1)
+            title: file1.name,
+            src: URL.createObjectURL(file1),
+            file: file1
         });
 
-        setAudio2({
-            title: file2?.name,
-            src: URL.createObjectURL(file2)
-        });
-
-        const formData = new FormData();
-        for (let i = 0; i < files.length; i++) {
-            formData.append(`mp3Files`, files[i]);
-        }
-
-        if (audio1.src !== "" && audio2.src !== "") {
-            const promise = dispatch(getUploadedTracks(formData));
-            promise.then(res => {
-                //const blobUrl = URL.createObjectURL(new Blob([res.data.mp3], { type: 'audio' }));
-                setName(res.data.name || '')
-                setArtist(res.data.artist || '')
-                setImage(res.data.Image || '')
-                setGenre(res.data.genre || '')
-                setAlbum(res.data.album || '')
-                setMp3File(res.data.mp3)
-                setOutput({
-                    title: res.data.artist,
-                    src: res.data.mp3
-                });
-            }).catch(error => {
-                console.log(error); // this will log any errors that occurred during the request
+        if (audio1.src !== "") {
+            setAudio2({
+                title: file1.name,
+                src: URL.createObjectURL(file1),
+                file: file1
             });
+            setFiles(files);
         }
+
+        if (file2) {
+            setAudio2({
+                title: file2.name,
+                src: URL.createObjectURL(file2),
+                file: file2
+            });
+            setFiles(files);
+        }
+
     };
+
+    const handleFile1Removal = (async) => {
+        setAudio1({
+            title: "",
+            src: "",
+            file: null
+        });
+    }
+
+    const handleFile2Removal = (async) => {
+        setAudio2({
+            title: "",
+            src: "",
+            file: null
+        });
+    }
 
     useEffect(() => {
         console.log(output.src)
-    }, [output]);
+    }, [output, mp3File, audio1, audio2, files]);
+
+    const handlePreview = async (event) => {
+        const formData = new FormData();
+        for (let i = 0; i < files.length; i++) {
+            formData.append(`mp3Files`, files[i]);
+            formData.append(`fadeinDuration`, fadeIn);
+            formData.append(`pitch`, pitch);
+            formData.append(`speed`, speed);
+            formData.append(`fadeoutDuration`, fadeOut);
+        }
+
+        console.log(pitch, speed)
+        
+        const promise = dispatch(getUploadedTracks(formData));
+        promise.then(res => {
+            //const blobUrl = URL.createObjectURL(new Blob([res.data.mp3], { type: 'audio' }));
+            setName(res.data.name || '')
+            setArtist(res.data.artist || '')
+            setImage(res.data.Image || '')
+            setGenre(res.data.genre || '')
+            setAlbum(res.data.album || '')
+            setMp3File(res.data.mp3)
+            setOutput({
+                title: res.data.artist,
+                src: res.data.mp3
+            });
+        }).catch(error => {
+            console.log(error); // this will log any errors that occurred during the request
+        });
+    }
 
     useEffect(() => {
         const getCurrentUserReleases = async () => {
@@ -114,43 +203,6 @@ function TrackEditor() {
         fetchLikedTracksList();
     }, []);
 
-    const addTracks = (track) => {
-        if (audio1.src == "") {
-            setAudio1({
-                title: track.name,
-                src: track.mp3
-            });
-        } else if (audio2.src == "") {
-            setAudio2({
-                title: track.name,
-                src: track.mp3
-            })
-        }
-
-        if (audio1.src !== "" && audio2.src !== "") {
-
-            const formData = new FormData();
-            formData.append(`file1`, audio1.src);
-            formData.append(`file2`, audio2.src);
-            const promise = dispatch(getUploadedTracks(formData));
-            promise.then(res => {
-                //const blobUrl = URL.createObjectURL(new Blob([res.data.mp3], { type: 'audio' }));
-                setName(res.data.name || '')
-                setArtist(res.data.artist || '')
-                setImage(res.data.Image || '')
-                setGenre(res.data.genre || '')
-                setAlbum(res.data.album || '')
-                setMp3File(res.data.mp3)
-                setOutput({
-                    title: res.data.artist,
-                    src: res.data.mp3
-                });
-            }).catch(error => {
-                console.log(error); // this will log any errors that occurred during the request
-            });
-        }
-    };
-
     return (
         <main className="main">
             <div className="container-fluid">
@@ -168,19 +220,7 @@ function TrackEditor() {
                                     </div>
                                     <div className="dashbox__list-wrap">
                                         <ul className="main__list main__list--dashbox dashbox__scroll">
-                                            {likedTracks.map(track => (
-                                                <Track
-                                                    key={track._id}
-                                                    id={track._id}
-                                                    name={track.name}
-                                                    Image={track.Image}
-                                                    artist={track.artist}
-                                                    album={track.album}
-                                                    addTrack={() => addTracks(track)}
-                                                    isLiked={likedTracks.includes(track._id)}
-                                                    length="3:44"
-                                                />
-                                            ))}
+                                            <TrackList tracks={likedTracks} />
                                         </ul>
                                     </div>
                                 </div>
@@ -195,7 +235,6 @@ function TrackEditor() {
                                             <a className="dashbox__more" href="#">View All</a>
                                         </div>
                                     </div>
-
                                     <div className="dashbox__list-wrap">
                                         <ul className="main__list main__list--dashbox dashbox__scroll">
                                             <TrackList tracks={currentUserReleases} />
@@ -223,41 +262,99 @@ function TrackEditor() {
                                 onChange={handleFileUpload}
                             />
                         </div>
-
                     </div>
                     <div className="col-12">
-                        <div className="dashbox">
-                            <div className="dashbox__list-wrap">
-                                <div className="col-12">
-                                    {audio1 &&
-                                        <div className="player__content">
-                                            <span className="player__track"><b className="player__title">{audio1.title}</b> – <span className="player__artist">AudioPizza</span></span>
-                                            <audio src={audio1.src} id="audio0" controls></audio>
+                        {audio1.title && audio1.src &&
+                            <div className="dashbox">
+                                <div className="dashbox__list-wrap">
+                                    <div className="col-12">
+                                        <div className="profile__meta">
+                                            <div style={{ alignSelf: 'flex-end' }}>
+                                                <FaRegTimesCircle onClick={handleFile1Removal} size="1.5em" color="white" />
+                                            </div>
+                                            <h3 style={{ alignSelf: 'flex-start' }}>{audio1.title}</h3>
                                         </div>
-                                    }
-                                    {audio2 &&
-                                        <div className="player__content">
-                                            <span className="player__track"><b className="player__title">{audio2.title}</b> – <span className="player__artist">AudioPizza</span></span>
-                                            <audio src={audio2.src} id="audio1" controls></audio>
-                                        </div>
-                                    }
+
+                                        <Waveform url={audio1.src} />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div className="article">
-                            {output &&
-                                <div className="player__content">
-                                    <span className="player__track"><b className="player__title">{output.title}</b> – <span className="player__artist">AudioPizza</span></span>
-                                    <audio src={output.src} id="audio2" controls></audio>
+                        }
+                        {audio2.title && audio2.src &&
+                            <div className="dashbox">
+                                <div className="dashbox__list-wrap">
+                                    <div className="col-12">
+                                        <div className="profile__meta">
+                                            <div style={{ alignSelf: 'flex-end' }}>
+                                                <FaRegTimesCircle onClick={handleFile2Removal} size="1.5em" color="white" />
+                                            </div>
+                                            <h3 style={{ alignSelf: 'flex-start' }}>{audio2.title}</h3>
+                                        </div>
+                                        <Waveform url={audio2.src} />
+                                    </div>
                                 </div>
-                            }
-                        </div>
-                        <div className="col-3">
-                            <button onClick={handleOpenModal} className="sign__btn" type="button">Save</button>
-                        </div>
+                            </div>
+                        }
+
+                        {audio1.src && audio2.src &&
+                            <>
+                                <div style={{ margin: '30px' }}>
+                                    <div className="main__filter">
+                                        <div className="slider-radio">
+                                            <input type="radio" name="grade" id="fadein" checked={selected === "fadein"} onChange={handleRadioClick} />
+                                            <label htmlFor="fadein" onClick={handleRadioClick}>
+                                                <svg width='25' height='20' fill='#222227' xmlns='http://www.w3.org/2000/svg' style={{ marginRight: '4px' }}>
+                                                    <path opacity='.2' d='M1 20c-.552 0-1-.446-1-.998v-4.215a1 1 0 0 1 1-1h.294c2.74.005 4.094-.163 5.705-.937 1.931-.927 3.601-2.653 5.035-5.476 1.37-2.697 2.882-4.55 4.583-5.718C18.64.267 20.274-.014 23.547.001H24a1 1 0 0 1 1 1V19.01c0 .552-.448.99-1 .99H1Z' fill={selected === "fadein" ? "#FFF" : "#EF3852"} />
+                                                    <path d='M1 15.787a1 1 0 1 1 0-2h.294c2.74.005 4.094-.163 5.705-.937 1.931-.927 3.601-2.653 5.035-5.476 1.37-2.697 2.882-4.55 4.583-5.718C18.64.267 20.274-.014 23.547.001H24a1 1 0 1 1 0 2h-.462c-2.893-.013-4.197.211-5.79 1.304-1.402.962-2.702 2.558-3.93 4.975-1.626 3.199-3.607 5.247-5.953 6.373-1.962.942-3.55 1.14-6.574 1.134H1Z' fill={selected === "fadein" ? "#FFF" : "#EF3852"} />
+                                                </svg>
+
+                                                {selected === "fadein" ? "Fade in" : ""}
+                                            </label>
+                                            <input type="radio" name="grade" id="fadeout" checked={selected === "fadeout"} onChange={handleRadioClick} />
+                                            <label htmlFor="fadeout" onClick={handleRadioClick}>
+                                                <svg width='25' height='20' fill='none' xmlns='http://www.w3.org/2000/svg' style={{ marginRight: '4px' }}><path opacity='.3' d='M24 20c.552 0 1-.446 1-.998v-4.215a1 1 0 0 0-1-1h-.294c-2.74.005-4.094-.163-5.705-.937-1.931-.927-3.601-2.653-5.035-5.476-1.37-2.697-2.882-4.55-4.583-5.718C6.36.267 4.726-.014 1.453.001H1a1 1 0 0 0-1 1V19.01c0 .552.448.99 1 .99h23Z' fill={selected === "fadeout" ? "#FFF" : "#EF3852"} /><path d='M24 15.787a1 1 0 1 0 0-2h-.294c-2.74.005-4.094-.163-5.705-.937-1.931-.927-3.601-2.653-5.035-5.476-1.37-2.697-2.882-4.55-4.583-5.718C6.36.267 4.726-.014 1.453.001H1a1 1 0 1 0 0 2h.462c2.893-.013 4.197.211 5.79 1.304 1.402.962 2.702 2.558 3.93 4.975 1.626 3.199 3.607 5.247 5.953 6.373 1.962.942 3.55 1.14 6.574 1.134H24Z' fill={selected === "fadeout" ? "#FFF" : "#EF3852"} />
+                                                </svg>
+                                                {selected === "fadeout" ? "Fade out" : ""}
+                                            </label>
+                                            <input type="radio" name="grade" id="pitch" checked={selected === "pitch"} onChange={handleRadioClick} />
+                                            <label htmlFor="pitch" onClick={handleRadioClick}>
+                                                <svg width='20' height='20' fill={selected === "pitch" ? "#FFF" : "#EF3852"} xmlns='http://www.w3.org/2000/svg' style={{ marginRight: '4px' }}>
+                                                    <g fill={selected === "pitch" ? "#FFF" : "#EF3852"}>
+                                                        <path d='M9 2a1 1 0 1 1 2 0v16a1 1 0 1 1-2 0V2ZM1 9a1 1 0 0 1 2 0v2a1 1 0 1 1-2 0V9ZM14 4a1 1 0 0 0-1 1v10a1 1 0 1 0 2 0V5a1 1 0 0 0-1-1ZM5 5a1 1 0 0 1 2 0v10a1 1 0 1 1-2 0V5ZM18 8a1 1 0 0 0-1 1v2a1 1 0 1 0 2 0V9a1 1 0 0 0-1-1Z' />
+                                                    </g>
+                                                </svg>
+                                                {selected === "pitch" ? "Pitch" : ""}
+                                            </label>
+                                            <input type="radio" name="grade" id="speed" checked={selected === "speed"} onChange={handleRadioClick} />
+                                            <label htmlFor="speed" onClick={handleRadioClick}>
+                                                <FaRegClock size="1.5em" color={selected === "speed" ? "#FFF" : "#EF3852"} style={{ marginRight: '4px' }} /> {selected === "speed" ? "Speed" : ""}
+                                            </label>
+                                            <input type="radio" name="grade" id="volume" checked={selected === 'volume'} onChange={handleRadioClick} />
+                                            <label htmlFor="volume" onClick={handleRadioClick}>
+                                                <FaVolumeUp size="1.5em" color={selected === "volume" ? "#FFF" : "#EF3852"} style={{ marginRight: '4px' }} /> {selected === "volume" ? "Volume" : ""}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                {renderEffectInput()}
+                                <div className="col-3">
+                                    <button onClick={handlePreview} className="sign__btn" type="button">Preview</button>
+                                </div>
+                            </>
+                        }
+                        {output.src &&
+                            <>
+
+                                <Waveform url={output.src} />
+
+                                <div className="col-3">
+                                    <button onClick={handleOpenModal} className="sign__btn" type="button">Save</button>
+                                </div>
+                            </>
+                        }
+
                         {isOpen &&
-                            <AddTrack name={name} artist={artist} image={image} album={album} genre={genre} mp3={mp3File} onCloseModal={() => setIsOpen(false)} />
+                            <AddTrack title={name} artists={artist} images={image} albums={album} genres={genre} mp3={output.src} onCloseModal={() => setIsOpen(false)} />
                         }
                     </div>
                 </div>
