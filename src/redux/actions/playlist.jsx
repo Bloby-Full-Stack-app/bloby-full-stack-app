@@ -1,8 +1,6 @@
 import axios from '../../api/axios';
 import { addTracksToPlaylist, getUserPlaylists, removeTracksFromPlaylist } from '../../api/endpoints/playlist';
-import api from '../../utils/api';
 import {
-  API,
   GET_CURRENT_USER_PLAYLISTS_SUCCESS,
   GET_CURRENT_USER_PLAYLISTS_FAIL,
   POST_ADD_TRACK_TO_PLAYLIST_SUCCESS,
@@ -12,20 +10,6 @@ import {
 } from '../constants.jsx';
 
 const token = localStorage.getItem('_auth');
-
-const config = {
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: `${token}`,
-  },
-};
-
-const configFile = {
-  headers: {
-    'Content-Type': 'multipart/form-data',
-    Authorization: `${token}`,
-  },
-};
 
 // Fetch all Tracks
 export const getCurrentUserPlaylists = () => async dispatch => {

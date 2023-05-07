@@ -10,12 +10,15 @@
     "react": "^18.2.0",
     "react-auth-kit": "^2.12.2",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.8.0",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.9.0",
     "react-scripts": "5.0.1",
     "redux": "^4.2.1",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.4.2",
+    "wavesurfer-react": "^2.2.2",
+    "wavesurfer.js": "^6.6.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

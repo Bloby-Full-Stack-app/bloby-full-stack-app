@@ -1,7 +1,8 @@
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useContext, useEffect, useRef } from 'react'
+import {AudioContext} from '../context/AudioContext';
 
 function Player() {
+    const [audioSrc] = useContext(AudioContext);
 
     return (
         <div className="player">
@@ -11,7 +12,7 @@ function Player() {
 
             <div className="player__content">
                 <span className="player__track"><b className="player__title">Epic Cinematic</b> – <span className="player__artist">AudioPizza</span></span>
-                <audio src="http://blast.volkovdesign.com/audio/12071151_epic-cinematic-trailer_by_audiopizza_preview.mp3" id="audio3" controls></audio>
+                <audio src={audioSrc} id="audio3" controls autoPlay></audio>
             </div>
         </div>
     );

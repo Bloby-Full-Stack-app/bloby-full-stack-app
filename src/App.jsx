@@ -19,6 +19,7 @@ import Login from './Pages/Login';
 import Release from './Pages/Release';
 import Playlist from './Pages/Playlist';
 import TrackEditor from './Pages/TrackEditor';
+import AudioContext, { AudioProvider } from './context/AudioContext';
 
 
 const PrivateRoute = ({ Component }) => {
@@ -31,11 +32,12 @@ function App() {
 
   return (
     <Provider store={store}>
-       <AuthProvider authType={'localstorage'} authName={'_auth'}>
-      <>
+      <AuthProvider authType={'localstorage'} authName={'_auth'}>
+        <>
           <Router>
             <Header />
             <Sidebar />
+            <AudioProvider>
             <Player />
             <Routes>
               <Route path="/" element={<Home />} />
@@ -51,9 +53,10 @@ function App() {
               } />
               <Route path="/login" element={<Login />} />
             </Routes>
+            </AudioProvider>
           </Router>
-        
-      </>
+
+        </>
       </AuthProvider>
     </Provider>
   );

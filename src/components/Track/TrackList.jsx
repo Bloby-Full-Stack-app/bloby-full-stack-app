@@ -51,6 +51,7 @@ function TrackList({ tracks, inPlaylist }) {
           Image={track.Image}
           artist={track.artist}
           album={track.album}
+          mp3={track.mp3}
           handleLikeTrack={handleLikeTrack(track._id)}
           isLiked={likedTracks.includes(track._id)}
           inPlaylist={inPlaylist}

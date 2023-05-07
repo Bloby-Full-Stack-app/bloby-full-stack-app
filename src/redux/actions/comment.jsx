@@ -5,8 +5,6 @@ import {
   POST_ADD_COMMENT_TO_PLAYLIST_FAIL,
 } from '../constants.jsx';
 
-const token = localStorage.getItem('_auth');
-
 export const addCommentToPlaylist = (playlistId, data) => async dispatch => {
   try {
     const res = await axios(commentPLaylist(playlistId, data))
