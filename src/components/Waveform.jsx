@@ -107,7 +107,7 @@ function Waveform(props) {
                 )}
             </div>
             
-            <div ref={waveformRef} style={{ marginTop: '20px' }}>
+            <div ref={waveformRef} style={{ marginTop: '20px', display: 'grid',gridTemplateColumns: '40px 1fr' }}>
             <button className="product__add" style={{ color: 'white', opacity: '1', position: 'relative', backgroundColor: 'transparent', border: '0px' }}
                 onClick={() => {
                     waveSurferRef.current.playPause()
@@ -115,7 +115,7 @@ function Waveform(props) {
                 }}
                 type="button"
             >{
-                isPlaying ? <FaPauseCircle size="3em" /> : <FaPlayCircle size="3em" />
+                isPlaying ? <FaPauseCircle style={{width: '2.5em', height: '2.5em'}} /> : <FaPlayCircle style={{width: '2.5em', height: '2.5em'}} />
               }</button>
             </div>
         </>

@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { FaVolumeUp } from 'react-icons/fa'
 
 function VolumeInput({ volume, onVolumeChange }) {
-    const [value, setValue] = useState(volume);
 
     const styles = {
         range: {
@@ -41,10 +40,10 @@ function VolumeInput({ volume, onVolumeChange }) {
 
     return (
         <div className="slider-radio">
-            <input type="range" min="0" max="100" step="1" value={volume} onChange={handleValueChange} style={styles.range} />
+            <input type="range" min="0" max="1" step="0.01" value={volume} onChange={handleValueChange} style={styles.range} />
             <FaVolumeUp size="1.5em" color="#FFF" style={{ marginRight: '4px' }} />
             <div className="profile__meta">
-                <span style={styles.value}>{volume}</span>
+                <span style={styles.value}>{(volume * 100).toFixed()}%</span>
             </div>
         </div>
     )
