@@ -12,10 +12,13 @@ import FadeOutInput from '../components/inputRange/FadeOutInput';
 import PitchInput from '../components/inputRange/PitchInput';
 import SpeedInput from '../components/inputRange/SpeedInput';
 import VolumeInput from '../components/inputRange/VolumeInput';
+import ProgressModal from '../components/Modals/ProgressModal';
 
 function TrackEditor() {
     const dispatch = useDispatch()
+    const [isLoading, setIsLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const [isOpen2, setIsOpen2] = useState(false);
     const [name, setName] = useState('')
     const [image, setImage] = useState('')
     const [artist, setArtist] = useState('')
@@ -24,7 +27,7 @@ function TrackEditor() {
     const [mp3File, setMp3File] = useState(null)
     const [currentUserReleases, setCurrentUserReleases] = useState([]);
     const [likedTracks, setLikedTracks] = useState([])
-    const [files, setFiles] = useState(null);
+    const [files, setFiles] = useState([]);
     const [audio1, setAudio1] = useState({
         title: "",
         src: "",
@@ -43,14 +46,14 @@ function TrackEditor() {
     });
 
     const [selected, setSelected] = useState("fadein");
-    const [volume, setVolume] = useState(50);
+    const [volume, setVolume] = useState(0.5);
     const [fadeIn, setFadeIn] = useState(0);
     const [fadeOut, setFadeOut] = useState(0);
     const [pitch, setPitch] = useState(1);
     const [speed, setSpeed] = useState(1);
     const handleVolumeChange = (value) => {
         setVolume(value);
-      };
+    };
     const handleFadeInChange = (value) => {
         setFadeIn(value);
     };
@@ -66,21 +69,21 @@ function TrackEditor() {
 
     const renderEffectInput = () => {
         switch (selected) {
-          case "fadein":
-            return <FadeInInput fadeIn={fadeIn} onFadeInChange={handleFadeInChange} />;
-        case "fadeout":
-            return <FadeOutInput fadeOut={fadeOut} onFadeOutChange={handleFadeOutChange} />;
-        case "pitch":
-            return <PitchInput pitch={pitch} onPitchChange={handlePitchChange} />
-        case "speed":
-            return <SpeedInput speed={speed} onSpeedChange={handleSpeedChange} />
-        case "volume":
-            return <VolumeInput volume={volume} onVolumeChange={handleVolumeChange} />
-          
-          default:
-            return null;
+            case "fadein":
+                return <FadeInInput fadeIn={fadeIn} onFadeInChange={handleFadeInChange} />;
+            case "fadeout":
+                return <FadeOutInput fadeOut={fadeOut} onFadeOutChange={handleFadeOutChange} />;
+            case "pitch":
+                return <PitchInput pitch={pitch} onPitchChange={handlePitchChange} />
+            case "speed":
+                return <SpeedInput speed={speed} onSpeedChange={handleSpeedChange} />
+            case "volume":
+                return <VolumeInput volume={volume} onVolumeChange={handleVolumeChange} />
+
+            default:
+                return null;
         }
-      };
+    };
 
     const handleRadioClick = (event) => {
         setSelected(event.target.id);
@@ -94,35 +97,43 @@ function TrackEditor() {
     };
 
     const handleFileUpload = async (event) => {
-        const files = event.target.files;
-        const file1 = files[0];
-        const file2 = files[1];
-
-        setAudio1({
-            title: file1.name,
-            src: URL.createObjectURL(file1),
-            file: file1
-        });
-
-        if (audio1.src !== "") {
-            setAudio2({
-                title: file1.name,
-                src: URL.createObjectURL(file1),
-                file: file1
-            });
-            setFiles(files);
+        const newFiles = event.target.files;
+        const newAudioFiles = [];
+      
+        // Create an array of new audio files
+        for (let i = 0; i < newFiles.length; i++) {
+          const file = newFiles[i];
+          const newAudio = {
+            title: file.name,
+            src: URL.createObjectURL(file),
+            file: file
+          };
+          newAudioFiles.push(newAudio);
         }
-
-        if (file2) {
-            setAudio2({
-                title: file2.name,
-                src: URL.createObjectURL(file2),
-                file: file2
-            });
-            setFiles(files);
+      
+        // If there are already files uploaded, append the new files to the existing files array
+        const updatedFiles = files.length > 0 ? [...files, ...newFiles] : newFiles;
+      
+        if (newAudioFiles.length === 1) {
+          if (!audio1.src) {
+            setAudio1(newAudioFiles[0]);
+          } else if (!audio2.src) {
+            setAudio2(newAudioFiles[0]);
+          } else {
+            // Handle case where there are already 2 files uploaded
+            console.log("Only 2 files can be uploaded at a time");
+          }
+        } else if (newAudioFiles.length > 1) {
+          setAudio1(newAudioFiles[0]);
+          setAudio2(newAudioFiles[1]);
+          console.log("Only the first 2 files will be uploaded");
         }
-
-    };
+      
+        console.log(newAudioFiles);
+        console.log(updatedFiles);
+        setFiles(updatedFiles);
+      };
+      
 
     const handleFile1Removal = (async) => {
         setAudio1({
@@ -145,6 +156,8 @@ function TrackEditor() {
     }, [output, mp3File, audio1, audio2, files]);
 
     const handlePreview = async (event) => {
+        setIsLoading(true);
+        setIsOpen2(true);
         const formData = new FormData();
         for (let i = 0; i < files.length; i++) {
             formData.append(`mp3Files`, files[i]);
@@ -152,10 +165,9 @@ function TrackEditor() {
             formData.append(`pitch`, pitch);
             formData.append(`speed`, speed);
             formData.append(`fadeoutDuration`, fadeOut);
+            formData.append(`volume`, volume)
         }
 
-        console.log(pitch, speed)
-        
         const promise = dispatch(getUploadedTracks(formData));
         promise.then(res => {
             //const blobUrl = URL.createObjectURL(new Blob([res.data.mp3], { type: 'audio' }));
@@ -169,7 +181,11 @@ function TrackEditor() {
                 title: res.data.artist,
                 src: res.data.mp3
             });
+            setIsLoading(false)
+            setIsOpen2(false);
         }).catch(error => {
+            setIsLoading(false)
+            setIsOpen2(false);
             console.log(error); // this will log any errors that occurred during the request
         });
     }
@@ -342,6 +358,9 @@ function TrackEditor() {
                                 </div>
                             </>
                         }
+                        {isOpen2 &&
+                            <ProgressModal />
+                        }
                         {output.src &&
                             <>
 
@@ -354,7 +373,7 @@ function TrackEditor() {
                         }
 
                         {isOpen &&
-                            <AddTrack title={name} artists={artist} images={image} albums={album} genres={genre} mp3={output.src} onCloseModal={() => setIsOpen(false)} />
+                            <AddTrack title={name} artists={artist} images={image} albums={album} genres={genre} mp3={output.src} onCloseModal={() => setIsOpen2(false)} />
                         }
                     </div>
                 </div>
