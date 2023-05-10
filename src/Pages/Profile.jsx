@@ -9,17 +9,23 @@ import axios from 'axios';
 import PlaylistList from '../components/Playlist/PlaylistList';
 import TrackList from '../components/Track/TrackList';
 import { fetchCurrentUserReleases, fetchLikedTracks } from '../api/endpoints/tracks';
+import { createEvent } from '../redux/actions/event';
 
 function Profile() {
 	const user = JSON.parse(localStorage.getItem("_auth_state"));
 	const dispatch = useDispatch()
 	const [likedTracks, setLikedTracks] = useState([])
 	const [name, setName] = useState('')
-	const [image, setImage] = useState('')
+	const [image, setImage] = useState('http://localhost:8090/public/images/864a32cf-ce9b-45d9-a980-addf3990f42a.png')
 	const [artist, setArtist] = useState('')
 	const [genre, setGenre] = useState('')
 	const [album, setAlbum] = useState('')
 	const [mp3File, setMp3File] = useState(null)
+	const [title, setTitle] = useState('');
+	const [about, setAbout] = useState('');
+	const [date, setDate] = useState('');
+	const [eventImage, setEventImage] = useState(null);
+	const [address, setAddress] = useState('')
 	const [playlists, setPlaylists] = useState([]);
 	const [currentUserReleases, setCurrentUserReleases] = useState([]);
 
@@ -53,6 +59,18 @@ function Profile() {
 		formData.append('album', album);
 		formData.append('mp3', mp3File);
 		dispatch(createTrack(formData));
+	}
+
+	const handleAddEvent = async (event) => {
+		event.preventDefault();
+		const formData = new FormData();
+		formData.append('title', title);
+		formData.append('about', about);
+		formData.append('date', date);
+		formData.append('Image', eventImage);
+		formData.append('address', address);
+		console.log(eventImage);
+		dispatch(createEvent(formData));
 	}
 
 	useEffect(() => {
@@ -134,8 +152,14 @@ function Profile() {
 								</li>
 
 								<li className="nav-item">
+									<a className="nav-link" data-toggle="tab" href="#tab-5" role="tab" aria-controls="tab-5" aria-selected="false">Events</a>
+								</li>
+
+								<li className="nav-item">
 									<a className="nav-link" data-toggle="tab" href="#tab-4" role="tab" aria-controls="tab-4" aria-selected="false">Settings</a>
 								</li>
+
+
 							</ul>
 
 							<button onClick={() => signOut()} className="profile__logout" type="button">
@@ -354,7 +378,146 @@ function Profile() {
 									</div>
 								</div>
 							</div>
+							<div className="tab-pane fade" id="tab-5" role="tabpanel">
+								<div className="row row--grid">
+									<div className="col-12">
+										<form onSubmit={handleAddEvent} className="sign__form sign__form--profile">
 
+											<div className="release">
+												<div className="release__content">
+													<label className="sign__label">Cover</label>
+													<div className="release__cover">
+														<img src={eventImage} alt="" />
+													</div>
+													<div className="release__stat">
+														<input id="eventImage" name="eventImage" type="file" onChange={e => setEventImage(e?.target.files)} />
+													</div>
+												</div>
+												<div className="release__list">
+													<div className="col-12">
+														<div className="sign__group">
+															<label className="sign__label">Title</label>
+															<input id="title" type="text" name="title" className="sign__input" placeholder="Title" value={title} onChange={e => setTitle(e?.target?.value)} />
+														</div>
+													</div>
+													<div className="col-12">
+														<div className="sign__group">
+															<label className="sign__label">Date</label>
+															<input id="artist" type="text" name="artist" className="sign__input" placeholder="Date" value={date} onChange={e => setDate(e?.target?.value)} />
+														</div>
+													</div>
+													<div className="col-12">
+														<div className="sign__group">
+															<label className="sign__label">Address</label>
+															<input id="address" type="text" name="address" className="sign__input" placeholder="Address" value={address} onChange={e => setAddress(e?.target?.value)} />
+														</div>
+													</div>
+													<div className="col-12">
+														<div className="sign__group">
+															<label className="sign__label">About</label>
+															<input id="artists" type="text" name="artists" className="sign__input" placeholder="Artists" value={about} onChange={e => setAbout(e?.target?.value)} />
+														</div>
+													</div>
+
+												</div>
+											</div>
+											<div className="col-12">
+												<button className="sign__btn">Add event</button>
+											</div>
+
+										</form>
+									</div>
+									<div className="col-12">
+										<div className="dashbox">
+											<div className="dashbox__table-wrap">
+												<div className="dashbox__table-scroll">
+													<table className="main__table">
+														<thead>
+															<tr>
+																<th>№</th>
+																<th><a href="#">Cover <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.71,10.21,12,7.91l2.29,2.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42l-3-3a1,1,0,0,0-1.42,0l-3,3a1,1,0,0,0,1.42,1.42Zm4.58,4.58L12,17.09l-2.29-2.3a1,1,0,0,0-1.42,1.42l3,3a1,1,0,0,0,1.42,0l3-3a1,1,0,0,0-1.42-1.42Z" /></svg></a></th>
+																<th><a href="#" className="active">Title <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17,13.41,12.71,9.17a1,1,0,0,0-1.42,0L7.05,13.41a1,1,0,0,0,0,1.42,1,1,0,0,0,1.41,0L12,11.29l3.54,3.54a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29A1,1,0,0,0,17,13.41Z" /></svg></a></th>
+																<th><a href="#" className="active">Date <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17,9.17a1,1,0,0,0-1.41,0L12,12.71,8.46,9.17a1,1,0,0,0-1.41,0,1,1,0,0,0,0,1.42l4.24,4.24a1,1,0,0,0,1.42,0L17,10.59A1,1,0,0,0,17,9.17Z" /></svg></a></th>
+																<th><a href="#">Participants <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.71,10.21,12,7.91l2.29,2.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42l-3-3a1,1,0,0,0-1.42,0l-3,3a1,1,0,0,0,1.42,1.42Zm4.58,4.58L12,17.09l-2.29-2.3a1,1,0,0,0-1.42,1.42l3,3a1,1,0,0,0,1.42,0l3-3a1,1,0,0,0-1.42-1.42Z" /></svg></a></th>
+																<th><a href="#">Status <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.71,10.21,12,7.91l2.29,2.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42l-3-3a1,1,0,0,0-1.42,0l-3,3a1,1,0,0,0,1.42,1.42Zm4.58,4.58L12,17.09l-2.29-2.3a1,1,0,0,0-1.42,1.42l3,3a1,1,0,0,0,1.42,0l3-3a1,1,0,0,0-1.42-1.42Z" /></svg></a></th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr>
+																<td>
+																	<div className="main__table-text main__table-text--number"><a href="#modal-info" className="open-modal">631</a></div>
+																</td>
+																<td>
+																	<div className="main__table-img">
+																		<img src="img/store/item3.jpg" alt="" />
+																	</div>
+																</td>
+																<td>
+																	<div className="main__table-text"><a href="#">Event 1</a></div>
+																</td>
+																<td>
+																	<div className="main__table-text">Aug 21, 2021</div>
+																</td>
+																<td>
+																	<div className="main__table-text">17/40</div>
+																</td>
+																<td>
+																	<div className="main__table-text main__table-text--green"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.72,8.79l-4.29,4.3L8.78,11.44a1,1,0,1,0-1.41,1.41l2.35,2.36a1,1,0,0,0,.71.29,1,1,0,0,0,.7-.29l5-5a1,1,0,0,0,0-1.42A1,1,0,0,0,14.72,8.79ZM12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm0,18a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z" /></svg>  Delivered</div>
+																</td>
+															</tr>
+
+															<tr>
+																<td>
+																	<div className="main__table-text main__table-text--number"><a href="#modal-info" className="open-modal">708</a></div>
+																</td>
+																<td>
+																	<div className="main__table-img">
+																		<img src="img/store/item4.jpg" alt="" />
+																	</div>
+																</td>
+																<td>
+																	<div className="main__table-text"><a href="#">Headphones ZR-991</a></div>
+																</td>
+																<td>
+																	<div className="main__table-text">Aug 14, 2021</div>
+																</td>
+																<td>
+																	<div className="main__table-text">1</div>
+																</td>
+																<td>
+																	<div className="main__table-text main__table-text--grey"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10,0,1,0,22,12,10.01114,10.01114,0,0,0,12,2Zm0,18a8,8,0,1,1,8-8A8.00917,8.00917,0,0,1,12,20ZM14.09814,9.63379,13,10.26807V7a1,1,0,0,0-2,0v5a1.00025,1.00025,0,0,0,1.5.86621l2.59814-1.5a1.00016,1.00016,0,1,0-1-1.73242Z" /></svg> On the way</div>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<div className="main__table-text main__table-text--number"><a href="#modal-info" className="open-modal">750</a></div>
+																</td>
+																<td>
+																	<div className="main__table-img">
+																		<img src="img/store/item1.jpg" alt="" />
+																	</div>
+																</td>
+																<td>
+																	<div className="main__table-text"><a href="#">Vinyl Player</a></div>
+																</td>
+																<td>
+																	<div className="main__table-text">Aug 5, 2021</div>
+																</td>
+																<td>
+																	<div className="main__table-text">1</div>
+																</td>
+																<td>
+																	<div className="main__table-text main__table-text--green"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.72,8.79l-4.29,4.3L8.78,11.44a1,1,0,1,0-1.41,1.41l2.35,2.36a1,1,0,0,0,.71.29,1,1,0,0,0,.7-.29l5-5a1,1,0,0,0,0-1.42A1,1,0,0,0,14.72,8.79ZM12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm0,18a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z" /></svg> Delivered</div>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

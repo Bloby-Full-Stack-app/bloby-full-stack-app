@@ -1585,10 +1585,10 @@ body::-webkit-scrollbar-thumb {
   fill: #eb5757;
 }
 .main__table-text--green {
-  color: #EF3852;
+  color: #25a56a;
 }
 .main__table-text--green svg {
-  fill: #EF3852;
+  fill: #25a56a;
 }
 .main__table-text--grey {
   color: #c0c0c0;
