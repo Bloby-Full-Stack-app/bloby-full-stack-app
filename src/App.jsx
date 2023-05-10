@@ -19,7 +19,10 @@ import Login from './Pages/Login';
 import Release from './Pages/Release';
 import Playlist from './Pages/Playlist';
 import TrackEditor from './Pages/TrackEditor';
-import AudioContext, { AudioProvider } from './context/AudioContext';
+import { AudioProvider } from './context/AudioContext';
+import LiveStream from './Pages/LiveStream';
+import Register from './Pages/Register';
+import Events from './Pages/Events';
 
 
 const PrivateRoute = ({ Component }) => {
@@ -40,18 +43,21 @@ function App() {
             <AudioProvider>
             <Player />
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Home />}/>
               <Route path="/artists" element={<Artists />} />
               <Route path="/releases" element={<Releases />} />
               <Route path="/Release" element={<Release />} />
+              <Route path="/Events" element={<Events />} />
               <Route path="/playlist/:playlistId" element={<Playlist />} />
               <Route path="/trackeditor" element={<TrackEditor />} />
+              <Route path="/livestream" element={<LiveStream />} />
               <Route path="/profile" element={
                 <RequireAuth loginPath={'/login'}>
                   <Profile />
                 </RequireAuth>
               } />
               <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
             </Routes>
             </AudioProvider>
           </Router>

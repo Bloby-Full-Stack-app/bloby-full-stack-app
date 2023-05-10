@@ -9,12 +9,14 @@ export const doLogin = data => async dispatch => {
             type: SET_AUTH,
             payload: res.data,
         });
+        
         return res
     } catch (err) {
         const errorMessage = (Object.values(err?.response.data || {}) || []).flat()[0] || ''
         dispatch({
             type: AUTH_FAILED,
         });
+        console.log(err?.response.data.message);
         //dispatch(setAlert(errorMessage, 'error'));
         return err
     }

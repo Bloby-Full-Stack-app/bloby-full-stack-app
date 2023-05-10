@@ -5,14 +5,17 @@ import { AudioContext } from '../../context/AudioContext';
 
 function Track(props) {
     const [isOpen, setIsOpen] = useState(false);
-    const [audioSrc, setAudioSrc] = useContext(AudioContext);
+    const { audioState, setAudioState } = useContext(AudioContext);
+
+    const handleClick = () => {
+        setAudioState((prevState) => ({
+            ...prevState,
+            audioSrc: props.mp3
+        }));
+    };
 
     const handleOpenModal = () => {
         setIsOpen(true);
-    };
-
-    const handleClick = () => {
-        setAudioSrc(props.mp3);
     };
 
     return (
@@ -42,10 +45,10 @@ function Track(props) {
                 {props.inPlaylist ?
                     <>
                         {props.belongsToCurrentUser ?
-                        <button className="cart__delete" type="button" onClick={props.handleRemoveTrack}>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.41,12l6.3-6.29a1,1,0,1,0-1.42-1.42L12,10.59,5.71,4.29A1,1,0,0,0,4.29,5.71L10.59,12l-6.3,6.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L12,13.41l6.29,6.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Z"></path></svg>
-                        </button>
-                        : ''
+                            <button className="cart__delete" type="button" onClick={props.handleRemoveTrack}>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.41,12l6.3-6.29a1,1,0,1,0-1.42-1.42L12,10.59,5.71,4.29A1,1,0,0,0,4.29,5.71L10.59,12l-6.3,6.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L12,13.41l6.29,6.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Z"></path></svg>
+                            </button>
+                            : ''
                         }
                     </>
                     : <button onClick={handleOpenModal} className="single-item__add open-modal">
