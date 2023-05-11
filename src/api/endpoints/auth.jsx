@@ -1,3 +1,5 @@
+const token = localStorage.getItem('_auth');
+
 export const login = (data) => {
     return {
         url: `http://localhost:8090/api/login`,
@@ -5,17 +7,22 @@ export const login = (data) => {
         data,
     }
 }
-/*export const logout = () => {
-    return {
-        url: `/api/auth/logout`,
-        method: 'POST',
-    }
-}
 
-export const register = (data) => {
+export const registerUser = (data) => {
     return {
-        url: `/api/auth/register`,
+        url: `http://localhost:8090/api/register`,
         method: 'POST',
         data,
     }
-}*/
+}
+
+export const getUsers = params => {
+    return {
+      url: `http://localhost:8090/api/getusers`,
+      method: 'GET',
+      params,
+      headers: {
+        Authorization: `${token}`,
+      },
+    };
+  };

@@ -10,7 +10,8 @@ function Track(props) {
     const handleClick = () => {
         setAudioState((prevState) => ({
             ...prevState,
-            audioSrc: props.mp3
+            audioSrc: props.mp3,
+            isPlaying: true
         }));
     };
 

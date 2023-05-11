@@ -63,7 +63,6 @@ export const createTrack = (data) => async dispatch => {
 export const getUploadedTrack = (data) => async dispatch => {
   try {
     const res = await axios(uploadTrack(data))
-    console.log(res);
     await dispatch({
       type: UPLOAD_TRACKS_SUCCESS,
       payload: res.data.message,
