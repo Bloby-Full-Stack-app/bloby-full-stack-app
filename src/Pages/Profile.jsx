@@ -10,6 +10,7 @@ import PlaylistList from '../components/Playlist/PlaylistList';
 import TrackList from '../components/Track/TrackList';
 import { fetchCurrentUserReleases, fetchLikedTracks } from '../api/endpoints/tracks';
 import { createEvent } from '../redux/actions/event';
+import { getEvents } from '../api/endpoints/event';
 
 function Profile() {
 	const user = JSON.parse(localStorage.getItem("_auth_state"));
@@ -28,6 +29,7 @@ function Profile() {
 	const [address, setAddress] = useState('')
 	const [playlists, setPlaylists] = useState([]);
 	const [currentUserReleases, setCurrentUserReleases] = useState([]);
+	const [events, setEvents] = useState([])
 
 	const signOut = useSignOut()
 
@@ -55,21 +57,22 @@ function Profile() {
 		formData.append('name', name);
 		formData.append('artist', artist);
 		formData.append('genre', genre);
-		formData.append('image', image);
+		formData.append('Image', image);
 		formData.append('album', album);
 		formData.append('mp3', mp3File);
 		dispatch(createTrack(formData));
 	}
 
+	const handleImageUpload = async (event) => {
+		setEventImage(event.target.files[0]);
+	}
+
 	const handleAddEvent = async (event) => {
-		event.preventDefault();
 		const formData = new FormData();
 		formData.append('title', title);
 		formData.append('about', about);
-		formData.append('date', date);
 		formData.append('Image', eventImage);
 		formData.append('address', address);
-		console.log(eventImage);
 		dispatch(createEvent(formData));
 	}
 
@@ -94,6 +97,17 @@ function Profile() {
 			}
 		};
 
+		const fetchEvents = async () => {
+			try {
+				const response = await axios(getEvents());
+				const { data } = response;
+				setEvents(data?.data || []);
+			} catch (error) {
+				console.log("Error loading events:", error);
+			}
+		};
+
+		fetchEvents();
 		getCurrentUserReleases();
 		getCurrentUserPlaylists();
 	}, []);
@@ -246,7 +260,7 @@ function Profile() {
 															<img src={image} alt="" onChange={e => setImage(e?.target?.src)} />
 														</div>
 														<div className="release__stat">
-															<input id="mp3" name="mp3" type="file" accept="audio/mp3" onChange={handleMp3Upload} />
+															<input id="mp3" name="mp3" type="file" onChange={handleMp3Upload} />
 														</div>
 													</div>
 													<div className="release__list">
@@ -387,10 +401,10 @@ function Profile() {
 												<div className="release__content">
 													<label className="sign__label">Cover</label>
 													<div className="release__cover">
-														<img src={eventImage} alt="" />
+														<img src={eventImage && URL.createObjectURL(eventImage)} alt="" />
 													</div>
 													<div className="release__stat">
-														<input id="eventImage" name="eventImage" type="file" onChange={e => setEventImage(e?.target.files)} />
+														<input id="Image" name="Image" type="file" onChange={handleImageUpload} />
 													</div>
 												</div>
 												<div className="release__list">
@@ -434,82 +448,40 @@ function Profile() {
 													<table className="main__table">
 														<thead>
 															<tr>
-																<th>№</th>
 																<th><a href="#">Cover <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.71,10.21,12,7.91l2.29,2.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42l-3-3a1,1,0,0,0-1.42,0l-3,3a1,1,0,0,0,1.42,1.42Zm4.58,4.58L12,17.09l-2.29-2.3a1,1,0,0,0-1.42,1.42l3,3a1,1,0,0,0,1.42,0l3-3a1,1,0,0,0-1.42-1.42Z" /></svg></a></th>
 																<th><a href="#" className="active">Title <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17,13.41,12.71,9.17a1,1,0,0,0-1.42,0L7.05,13.41a1,1,0,0,0,0,1.42,1,1,0,0,0,1.41,0L12,11.29l3.54,3.54a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29A1,1,0,0,0,17,13.41Z" /></svg></a></th>
-																<th><a href="#" className="active">Date <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17,9.17a1,1,0,0,0-1.41,0L12,12.71,8.46,9.17a1,1,0,0,0-1.41,0,1,1,0,0,0,0,1.42l4.24,4.24a1,1,0,0,0,1.42,0L17,10.59A1,1,0,0,0,17,9.17Z" /></svg></a></th>
-																<th><a href="#">Participants <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.71,10.21,12,7.91l2.29,2.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42l-3-3a1,1,0,0,0-1.42,0l-3,3a1,1,0,0,0,1.42,1.42Zm4.58,4.58L12,17.09l-2.29-2.3a1,1,0,0,0-1.42,1.42l3,3a1,1,0,0,0,1.42,0l3-3a1,1,0,0,0-1.42-1.42Z" /></svg></a></th>
+																<th><a href="#" className="active">Address <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17,13.41,12.71,9.17a1,1,0,0,0-1.42,0L7.05,13.41a1,1,0,0,0,0,1.42,1,1,0,0,0,1.41,0L12,11.29l3.54,3.54a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29A1,1,0,0,0,17,13.41Z" /></svg></a></th>
+																<th><a href="#" className="active">About <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17,9.17a1,1,0,0,0-1.41,0L12,12.71,8.46,9.17a1,1,0,0,0-1.41,0,1,1,0,0,0,0,1.42l4.24,4.24a1,1,0,0,0,1.42,0L17,10.59A1,1,0,0,0,17,9.17Z" /></svg></a></th>
+
 																<th><a href="#">Status <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.71,10.21,12,7.91l2.29,2.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42l-3-3a1,1,0,0,0-1.42,0l-3,3a1,1,0,0,0,1.42,1.42Zm4.58,4.58L12,17.09l-2.29-2.3a1,1,0,0,0-1.42,1.42l3,3a1,1,0,0,0,1.42,0l3-3a1,1,0,0,0-1.42-1.42Z" /></svg></a></th>
 															</tr>
 														</thead>
 														<tbody>
-															<tr>
-																<td>
-																	<div className="main__table-text main__table-text--number"><a href="#modal-info" className="open-modal">631</a></div>
-																</td>
-																<td>
-																	<div className="main__table-img">
-																		<img src="img/store/item3.jpg" alt="" />
-																	</div>
-																</td>
-																<td>
-																	<div className="main__table-text"><a href="#">Event 1</a></div>
-																</td>
-																<td>
-																	<div className="main__table-text">Aug 21, 2021</div>
-																</td>
-																<td>
-																	<div className="main__table-text">17/40</div>
-																</td>
-																<td>
-																	<div className="main__table-text main__table-text--green"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.72,8.79l-4.29,4.3L8.78,11.44a1,1,0,1,0-1.41,1.41l2.35,2.36a1,1,0,0,0,.71.29,1,1,0,0,0,.7-.29l5-5a1,1,0,0,0,0-1.42A1,1,0,0,0,14.72,8.79ZM12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm0,18a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z" /></svg>  Delivered</div>
-																</td>
-															</tr>
-
-															<tr>
-																<td>
-																	<div className="main__table-text main__table-text--number"><a href="#modal-info" className="open-modal">708</a></div>
-																</td>
-																<td>
-																	<div className="main__table-img">
-																		<img src="img/store/item4.jpg" alt="" />
-																	</div>
-																</td>
-																<td>
-																	<div className="main__table-text"><a href="#">Headphones ZR-991</a></div>
-																</td>
-																<td>
-																	<div className="main__table-text">Aug 14, 2021</div>
-																</td>
-																<td>
-																	<div className="main__table-text">1</div>
-																</td>
-																<td>
-																	<div className="main__table-text main__table-text--grey"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10,0,1,0,22,12,10.01114,10.01114,0,0,0,12,2Zm0,18a8,8,0,1,1,8-8A8.00917,8.00917,0,0,1,12,20ZM14.09814,9.63379,13,10.26807V7a1,1,0,0,0-2,0v5a1.00025,1.00025,0,0,0,1.5.86621l2.59814-1.5a1.00016,1.00016,0,1,0-1-1.73242Z" /></svg> On the way</div>
-																</td>
-															</tr>
-															<tr>
-																<td>
-																	<div className="main__table-text main__table-text--number"><a href="#modal-info" className="open-modal">750</a></div>
-																</td>
-																<td>
-																	<div className="main__table-img">
-																		<img src="img/store/item1.jpg" alt="" />
-																	</div>
-																</td>
-																<td>
-																	<div className="main__table-text"><a href="#">Vinyl Player</a></div>
-																</td>
-																<td>
-																	<div className="main__table-text">Aug 5, 2021</div>
-																</td>
-																<td>
-																	<div className="main__table-text">1</div>
-																</td>
-																<td>
-																	<div className="main__table-text main__table-text--green"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.72,8.79l-4.29,4.3L8.78,11.44a1,1,0,1,0-1.41,1.41l2.35,2.36a1,1,0,0,0,.71.29,1,1,0,0,0,.7-.29l5-5a1,1,0,0,0,0-1.42A1,1,0,0,0,14.72,8.79ZM12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm0,18a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z" /></svg> Delivered</div>
-																</td>
-															</tr>
+															{events.map((event) => (
+																<React.Fragment key={event._id}>
+																	<>
+																		<tr>
+																			<td>
+																				<div className="main__table-img">
+																					<img src={event.image} alt="" />
+																				</div>
+																			</td>
+																			<td>
+																				<div className="main__table-text">{event.title}</div>
+																			</td>
+																			<td>
+																				<div className="main__table-text">{event.address}</div>
+																			</td>
+																			<td>
+																				<div className="main__table-text">{event.about}</div>
+																			</td>
+																			<td>
+																				<div className="main__table-text main__table-text--green"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.72,8.79l-4.29,4.3L8.78,11.44a1,1,0,1,0-1.41,1.41l2.35,2.36a1,1,0,0,0,.71.29,1,1,0,0,0,.7-.29l5-5a1,1,0,0,0,0-1.42A1,1,0,0,0,14.72,8.79ZM12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm0,18a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z" /></svg> Scheduled</div>
+																			</td>
+																		</tr>
+																	</>
+																</React.Fragment>
+															))}
 														</tbody>
 													</table>
 												</div>

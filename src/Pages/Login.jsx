@@ -10,6 +10,7 @@ function Login () {
     const { loading, auth } = useSelector(state => state.auth);
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+	const [errorMessage, setErrorMessage] = useState('')
     
     const signIn = useSignIn()
     const navigate = useNavigate()
@@ -34,7 +35,9 @@ function Login () {
             } else {
                 
             }
-        }
+        } else {
+			setErrorMessage(res.response.data.message);
+		}
     };
 
 
@@ -50,10 +53,7 @@ function Login () {
 					<div className="sign">
 						<div className="sign__content">
 							<form onSubmit={handleSubmit} className="sign__form">
-								<a href="index.html" className="sign__logo">
-									<img src="img/logo.svg" alt="" />
-								</a>
-
+								<label style={{color: 'red', marginBottom: '10px'}}>{errorMessage}</label>
 								<div className="sign__group">
 									<input type="text" className="sign__input" id="email" placeholder="Email" value={email}
                                     onChange={e => setEmail(e?.target?.value)} />

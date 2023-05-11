@@ -37,7 +37,6 @@ const AddToPlayListModal = (props) => {
             playlistId: playlistId,
             playlistName: playlistName
         }));
-        console.log(playlistId);
         //onAddToPlaylist(playlistId);
         props.onCloseModal();
     };

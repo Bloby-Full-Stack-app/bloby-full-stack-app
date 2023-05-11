@@ -169,6 +169,7 @@ function TrackEditor() {
         }
 
         const promise = dispatch(getUploadedTracks(formData));
+        console.log(files)
         promise.then(res => {
             //const blobUrl = URL.createObjectURL(new Blob([res.data.mp3], { type: 'audio' }));
             setName(res.data.name || '')

@@ -51,19 +51,15 @@ function ReleaseList() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
 
-    /*function handleClick(track) {
-        console.log('Track clicked:', track.name);
-        dispatc(setTrack(track));
-    }*/
-
     return (
         <>
             {releases.map(release => (
                 <Release
-                    key={release.id}
+                    key={release._id}
                     name={release.name}
                     artist={release.artist}
                     image={release.Image}
+                    mp3={release.mp3}
                     //length={release.length}
                     //onClick={() => handleClick(track)}
                 />
