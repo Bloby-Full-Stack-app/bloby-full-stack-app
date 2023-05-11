@@ -52,7 +52,11 @@ function App() {
               <Route path="/playlist/:playlistId" element={<Playlist />} />
               <Route path="/trackeditor" element={<TrackEditor />} />
               <Route path="/livestream" element={<LiveStream />} />
-              <Route path="/messages" element={<Messages />} />
+              <Route path="/messages" element={
+              <RequireAuth loginPath={'/login'}>
+                  <Messages />
+                </RequireAuth>
+              } />
               <Route path="/profile" element={
                 <RequireAuth loginPath={'/login'}>
                   <Profile />
