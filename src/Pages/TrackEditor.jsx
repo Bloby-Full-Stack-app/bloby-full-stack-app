@@ -29,6 +29,15 @@ function TrackEditor() {
     const [likedTracks, setLikedTracks] = useState([])
     const [files, setFiles] = useState([]);
     const [newAudioFiles, setNewAudioFiles] = useState([]);
+    const [selectedRegion, setSelectedRegion] = useState(null);
+    const [regionStart, setRegionStart] = useState(null)
+    const [regionEnd, setRegionEnd] = useState(null)
+    const [selected, setSelected] = useState("fadein");
+    const [volume, setVolume] = useState(1);
+    const [fadeIn, setFadeIn] = useState(0);
+    const [fadeOut, setFadeOut] = useState(0);
+    const [pitch, setPitch] = useState(1);
+    const [speed, setSpeed] = useState(1);
     const [audio1, setAudio1] = useState({
         title: "",
         src: "",
@@ -47,12 +56,21 @@ function TrackEditor() {
         file: null
     });
 
-    const [selected, setSelected] = useState("fadein");
-    const [volume, setVolume] = useState(1);
-    const [fadeIn, setFadeIn] = useState(0);
-    const [fadeOut, setFadeOut] = useState(0);
-    const [pitch, setPitch] = useState(1);
-    const [speed, setSpeed] = useState(1);
+    const formatTime = (timeInSeconds) => {
+        const minutes = Math.floor(timeInSeconds / 60);
+        const seconds = Math.floor(timeInSeconds % 60);
+        const formattedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+        return `${minutes}:${formattedSeconds}`;
+    }
+
+    const handleRegionChange = (region) => {
+        setRegionStart(formatTime(region.start));
+        setRegionEnd(formatTime(region.end));
+        console.log(regionStart);
+        console.log(regionEnd);
+      };
+
+    
     const handleVolumeChange = (value) => {
         setVolume(value);
     };
@@ -92,7 +110,6 @@ function TrackEditor() {
     }
 
     const handleOpenModal = () => {
-        // if output src is not empty
         if (output.src !== "") {
             setIsOpen(true);
         }
@@ -100,7 +117,6 @@ function TrackEditor() {
 
     const addTrackToMergeList = (track) => {
         console.log(track)
-        // check at first if audio1 is empty of not if it is set the audio1 else set audio 2
 
         if (audio1.src === "") {
             setAudio1({
@@ -115,53 +131,7 @@ function TrackEditor() {
                 file: track.file,
             })
         }
-        console.log("works")
     };
-    
-
-    const handleFileUpload = async (event) => {
-        const newFiles = event.target.files;
-      
-        // Create an array of new audio files
-        for (let i = 0; i < newFiles.length; i++) {
-          const file = newFiles[i];
-          const newAudio = {
-            title: file.name,
-            src: URL.createObjectURL(file),
-            file: file
-          };
-          if (newAudioFiles.length < 2) {
-            setNewAudioFiles((prevAudioFiles) => [...prevAudioFiles, newAudio]);
-          } else {
-            console.log("Maximum limit of 3 files reached");
-            break;
-          }
-        }
-      
-        // If there are already files uploaded, append the new files to the existing files array
-        const updatedFiles = newAudioFiles.length > 0 ? [...files, ...newFiles] : newFiles;
-        setFiles(updatedFiles);
-      };
-
-    useEffect(() => {
-        if (newAudioFiles.length === 1) {
-            if (!audio1.src) {
-              setAudio1(newAudioFiles[0]);
-            } else if (!audio2.src) {
-              setAudio2(newAudioFiles[0]);
-            } else {
-              console.log("Only 2 files can be uploaded at a time");
-            }
-          } else if (newAudioFiles.length > 1) {
-            setAudio1(newAudioFiles[0]);
-            setAudio2(newAudioFiles[1]);
-            console.log("Only the first 2 files will be uploaded");
-          } else {
-            setAudio1({ title: "", src: "", file: null });
-            setAudio2({ title: "", src: "", file: null });
-          }
-        console.log(files);
-      }, [newAudioFiles]);
 
     const handleFile1Removal = () => {
         setAudio1({
@@ -181,7 +151,8 @@ function TrackEditor() {
 
     useEffect(() => {
         console.log(output.src)
-    }, [output, mp3File, audio1, audio2, files]);
+        console.log(selectedRegion)
+    }, [output, mp3File, audio1, audio2, files, selectedRegion]);
 
     const handlePreview = async (event) => {
         setIsLoading(true);
@@ -245,7 +216,7 @@ function TrackEditor() {
 
     useEffect(() => {
         fetchLikedTracksList();
-    }, []);
+    }, [regionStart, regionEnd]);
 
     return (
         <main className="main">

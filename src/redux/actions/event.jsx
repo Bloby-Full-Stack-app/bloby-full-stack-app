@@ -8,6 +8,7 @@ import {
     ADD_EVENT_TO_FAVORITES_SUCCESS,
     API,
 } from '../constants.jsx';
+import { setAlert } from './alert';
 
 const token = localStorage.getItem('_auth');
 
@@ -26,7 +27,7 @@ export const createEvent = (data) => async dispatch => {
       type: ADD_EVENT_SUCCESS,
       payload: res.data.message,
     });
-    //dispatch(setAlert(res.data.message, 'success'));
+    dispatch(setAlert('Event created successfully', 'success'));
   } catch (err) {
     dispatch({
       type: ADD_EVENT_FAIL,
@@ -44,6 +45,7 @@ export const addEventToFavorites = eventId => async dispatch => {
         type: ADD_EVENT_TO_FAVORITES_SUCCESS,
         payload: res.data.message,
       });
+      dispatch(setAlert('Event added to favorites', 'success'));
       return res.data;
       //dispatch(setAlert(res.data.message, 'success'));
     } catch (err) {

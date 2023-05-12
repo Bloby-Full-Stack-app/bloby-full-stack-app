@@ -12,6 +12,18 @@ export const getUserPlaylists = params => {
     };
   };
 
+  export const addPlaylist = (data) => {
+    return {
+      url: `http://localhost:8090/api/createPlaylist`,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${token}`,
+        },
+        data,
+    }
+};
+
   export const addTracksToPlaylist = ( trackId, data, params ) => {
     return {
       url: `http://localhost:8090/api/addTrackToPlaylist/${trackId}`,

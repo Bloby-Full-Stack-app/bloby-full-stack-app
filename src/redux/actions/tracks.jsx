@@ -1,5 +1,5 @@
 import axios from '../../api/axios';
-import { addTrack, likeUnlikeTrack, mergeTracks, uploadTrack } from '../../api/endpoints/tracks';
+import { addTrack, likeUnlikeTrack, mergeTracks, trimTrack, uploadTrack } from '../../api/endpoints/tracks';
 import api from '../../utils/api';
 import {
   API,
@@ -14,6 +14,7 @@ import {
   UPLOAD_TRACKS_FAIL,
   UPLOAD_TRACKS_SUCCESS,
 } from '../constants.jsx';
+import { setAlert } from './alert';
 
 const token = localStorage.getItem('_auth');
 
@@ -49,7 +50,7 @@ export const createTrack = (data) => async dispatch => {
       type: POST_TRACKS_SUCCESS,
       payload: res.data.message,
     });
-    //dispatch(setAlert(res.data.message, 'success'));
+    dispatch(setAlert('Track created successfully', 'success'));
   } catch (err) {
     dispatch({
       type: POST_TRACKS_FAIL,
@@ -100,6 +101,26 @@ export const getUploadedTracks = data => async dispatch => {
       type: UPLOAD_TRACKS_SUCCESS,
       payload: res.data.message,
     });
+    dispatch(setAlert('Tracks merged successfully', 'success'));
+    return res.data;
+    //dispatch(setAlert(res.data.message, 'success'));
+  } catch (err) {
+    dispatch({
+      type: UPLOAD_TRACKS_FAIL,
+      payload: err.response.data.message,
+    });
+    //dispatch(setAlert(err.response.data.message, 'error'));
+  }
+};
+
+export const getTrimmedTrack = data => async dispatch => {
+  try {
+    const res = await axios(trimTrack(data))
+    await dispatch({
+      type: UPLOAD_TRACKS_SUCCESS,
+      payload: res.data.message,
+    });
+    dispatch(setAlert('Track trimmed successfully', 'success'));
     return res.data;
     //dispatch(setAlert(res.data.message, 'success'));
   } catch (err) {
@@ -119,6 +140,7 @@ export const likeTrack = trackId => async dispatch => {
       type: LIKE_TRACK_SUCCESS,
       payload: res.data.message,
     });
+    dispatch(setAlert(res.data.message, 'success'));
     return res.data;
     //dispatch(setAlert(res.data.message, 'success'));
   } catch (err) {

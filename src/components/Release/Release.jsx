@@ -8,7 +8,10 @@ function Release(props) {
         setAudioState((prevState) => ({
             ...prevState,
             audioSrc: props.mp3,
-            isPlaying: true
+            isPlaying: true,
+            title: props.name,
+            artist: props.artist,
+            image: props.image
         }));
     };
     return (
