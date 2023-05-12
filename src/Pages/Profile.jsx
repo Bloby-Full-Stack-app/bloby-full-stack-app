@@ -11,6 +11,9 @@ import TrackList from '../components/Track/TrackList';
 import { fetchCurrentUserReleases, fetchLikedTracks } from '../api/endpoints/tracks';
 import { createEvent } from '../redux/actions/event';
 import { getEvents } from '../api/endpoints/event';
+import { LocalizationProvider, MobileDateTimePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import dayjs from 'dayjs'
 
 function Profile() {
 	const user = JSON.parse(localStorage.getItem("_auth_state"));
@@ -68,10 +71,12 @@ function Profile() {
 	}
 
 	const handleAddEvent = async (event) => {
+		event.preventDefault();
 		const formData = new FormData();
 		formData.append('title', title);
 		formData.append('about', about);
 		formData.append('Image', eventImage);
+		formData.append('date', date);
 		formData.append('address', address);
 		dispatch(createEvent(formData));
 	}
@@ -160,7 +165,8 @@ function Profile() {
 								<li className="nav-item">
 									<a className="nav-link" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab-2" aria-selected="false">Releases</a>
 								</li>
-
+								{user.role == 'Artist' &&
+								<>
 								<li className="nav-item">
 									<a className="nav-link" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3" aria-selected="false">Upload new track</a>
 								</li>
@@ -168,7 +174,8 @@ function Profile() {
 								<li className="nav-item">
 									<a className="nav-link" data-toggle="tab" href="#tab-5" role="tab" aria-controls="tab-5" aria-selected="false">Events</a>
 								</li>
-
+								</>
+								}
 								<li className="nav-item">
 									<a className="nav-link" data-toggle="tab" href="#tab-4" role="tab" aria-controls="tab-4" aria-selected="false">Settings</a>
 								</li>
@@ -417,8 +424,12 @@ function Profile() {
 													<div className="col-12">
 														<div className="sign__group">
 															<label className="sign__label">Date</label>
-															<input id="artist" type="text" name="artist" className="sign__input" placeholder="Date" value={date} onChange={e => setDate(e?.target?.value)} />
+															<LocalizationProvider dateAdapter={AdapterDayjs}>
+																<MobileDateTimePicker label={'"year"'} openTo="year" value={date}
+  																	onChange={(newValue) => setDate(newValue)} />
+    														</LocalizationProvider>
 														</div>
+														
 													</div>
 													<div className="col-12">
 														<div className="sign__group">

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import BuyTicketModal from './Modals/BuyTicketModal';
 import { FaStar, FaRegStar } from 'react-icons/fa'
+import { Link } from 'react-router-dom';
 
 function UpcomingEvent(props) {
     //const [soldOut, setSoldOut] = useState(false);
@@ -58,7 +59,7 @@ function UpcomingEvent(props) {
                 </a>
                 <span className="event__date">{props.date}</span>
                 <span className="event__time">{props.time}</span>
-                <h3 className="event__title"><a href="event.html">{props.name}</a></h3>
+                <h3 className="event__title"><Link to={`/event/${props.id}`}>{props.name}</Link></h3>
                 <p className="event__address">{props.address}</p>
             </div>
 

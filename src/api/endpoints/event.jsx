@@ -20,6 +20,14 @@ export const addEvent = (data) => {
     }
 };
 
+export const getEventById = ({eventId, params}) => {
+    return {
+      url: `http://localhost:8090/api/event/${eventId}`,
+      method: 'GET',
+      params,
+    };
+  };
+
 export const fetchSavedEvents = params => {
     return {
       url: `http://localhost:8090/api/fetchSavedEvents`,

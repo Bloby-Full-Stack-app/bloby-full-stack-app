@@ -95,7 +95,7 @@ function Events() {
                             {events.map((event) => (
                                 <React.Fragment key={event._id}>
                                     <div className="col-12 col-md-6 col-xl-4">
-                                        <UpcomingEvent key={event._id} handleAddToFavorites={handleAddToFavorites(event._id)} isSaved={savedEvents.includes(event._id)} img={event.image} soldOut={false} date="March 16, 2021" time="7:00 pm" name={event.title} address={event.address} />
+                                        <UpcomingEvent id={event._id} handleAddToFavorites={handleAddToFavorites(event._id)} isSaved={savedEvents.includes(event._id)} img={event.image} soldOut={false} date={new Date(event.date).toLocaleString()} time="7:00 pm" name={event.title} address={event.address} />
                                     </div>
                                 </React.Fragment>
                             ))}
