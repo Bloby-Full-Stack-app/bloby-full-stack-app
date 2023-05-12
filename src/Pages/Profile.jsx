@@ -57,6 +57,7 @@ function Profile() {
 	};
 
 	const handleSubmit = async (event) => {
+		event.preventDefault();
 		const formData = new FormData();
 		formData.append('name', name);
 		formData.append('artist', artist);
@@ -431,8 +432,8 @@ function Profile() {
 													</div>
 													<div className="col-12">
 														<div className="sign__group">
-															<label className="sign__label">About</label>
-															<input id="artists" type="text" name="artists" className="sign__input" placeholder="Artists" value={about} onChange={e => setAbout(e?.target?.value)} />
+															<label className="sign__label">Description</label>
+															<input id="artists" type="text" name="artists" className="sign__input" placeholder="Description" value={about} onChange={e => setAbout(e?.target?.value)} />
 														</div>
 													</div>
 

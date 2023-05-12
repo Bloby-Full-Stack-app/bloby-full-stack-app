@@ -43,10 +43,10 @@ function Sidebar() {
                                 <Link to="/trackeditor"><span>Merge tracks</span></Link>
                             </li>
                             <li className="sidebar__nav-item">
-                                <Link to="/trackeditor" onClick={() => handleLinkClick('/trackeditor')}><span>Trim tracks</span></Link>
+                                <Link to="/trimtrack"><span>Trim tracks</span></Link>
                             </li>
                             <li className="sidebar__nav-item">
-                                <Link to="/trackeditor" onClick={() => handleLinkClick('/trackeditor')}><span>Tracks joiner</span></Link>
+                                <Link to="/trackeditor"><span>Tracks joiner</span></Link>
                             </li>
                         </ul>
                     </div>

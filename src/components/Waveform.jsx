@@ -12,6 +12,11 @@ function Waveform(props) {
     const [isPlaying, toggleIsPlaying] = useState(false)
     const [selectedRegion, setSelectedRegion] = useState(null)
 
+    const handleRegionClick = (region, event) => {
+        props.onRegionChange(region);
+        setSelectedRegion(region)
+    };
+
     useEffect(() => {
         waveSurferRef.current = WaveSurfer.create({
             container: waveformRef.current,
@@ -25,11 +30,11 @@ function Waveform(props) {
             plugins: [
                 RegionsPlugin.create({
                     regions: [
+                        props.hasRegion ? 
                         {
                             start: 0,
                             end: 50,
-                            drag: false,
-                            
+                            drag: true,
                             color: 'rgba(238, 56, 82, 0.1)',
                             borderWidth: 3,
                             handlesWidth: 10,
@@ -42,6 +47,9 @@ function Waveform(props) {
                                     'background-color': 'white'
                                 }
                             }
+                        }
+                        : {
+
                         }
                     ],
                 })
@@ -63,9 +71,7 @@ function Waveform(props) {
                 setCurrentTime(formattedTime);
             });
 
-            waveSurferRef.current.on('region-click', (region, event) => {
-                setSelectedRegion(region);
-            });
+            waveSurferRef.current.on('region-click', handleRegionClick);
         }
 
         return () => {

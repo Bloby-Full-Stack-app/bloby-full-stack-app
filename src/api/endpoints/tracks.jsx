@@ -44,6 +44,18 @@ export const mergeTracks = (data) => {
   }
 };
 
+export const trimTrack = (data) => {
+  return {
+    url: `http://localhost:8090/api/trimTrack`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${token}`,
+      },
+      data,
+  }
+};
+
 export const uploadTrack = (data) => {
   return {
     url: `http://localhost:8090/api/uploadTrack`,

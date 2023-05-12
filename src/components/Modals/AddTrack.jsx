@@ -22,7 +22,7 @@ const AddTrack = (props, { title, artists, genres, albums, images}) => {
         formData.append('mp3', mp3File);
         formData.append('file', file)
         dispatch(createTrack(formData));
-        //props.onCloseModal();
+        props.onCloseModal();
     };
 
     return (

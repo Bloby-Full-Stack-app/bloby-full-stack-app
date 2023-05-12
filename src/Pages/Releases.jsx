@@ -1,11 +1,34 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import UpcomingEvent from '../components/UpcomingEvent';
 import Release from '../components/Releases';
 import Breadcrumb from '../components/Breadcrumb';
 import Track from '../components/Track/Track';
 import ReleaseList from '../components/Release/ReleaseList';
+import axios from 'axios';
+import { fetchReleases } from '../api/endpoints/releases';
 
 function Releases () {
+    const [releases, setReleases] = useState([]);
+
+    useEffect(() => {
+        const getReleases = async () => {
+            const promise = axios(
+                fetchReleases()
+            );
+    
+            const res = await promise;
+            const { data } = res;
+            if (res.status === 200 || res.status === 201) {
+                try {
+                    setReleases(data?.data || []);
+                } catch { }
+            } else {
+                // TODO: Handle tracks loading error
+            }
+        };
+        getReleases();
+    }, [])
+    
     return (
         <main className="main">
             <div className="container-fluid">
@@ -34,7 +57,7 @@ function Releases () {
                         </div>
 
                         <div className="row row--grid">
-                            <ReleaseList />
+                            <ReleaseList releases={releases} />
                         </div>
 
                         <button className="main__load" type="button">Load more</button>

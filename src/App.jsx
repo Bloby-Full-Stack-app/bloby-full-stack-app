@@ -26,6 +26,8 @@ import Events from './Pages/Events';
 import Messages from './Pages/Messages';
 import Event from './Pages/Event';
 import Artist from './Pages/Artist';
+import TrimTrack from './Pages/TrimTrack';
+import Notification from './components/Notification';
 
 
 const PrivateRoute = ({ Component }) => {
@@ -41,6 +43,7 @@ function App() {
       <AuthProvider authType={'localstorage'} authName={'_auth'}>
         <>
           <Router>
+          <Notification />
             <Header />
             <Sidebar />
             <AudioProvider>
@@ -55,6 +58,7 @@ function App() {
               <Route path="/event/:eventId" element={<Event />} />
               <Route path="/artist/:userId" element={<Artist />} />
               <Route path="/trackeditor" element={<TrackEditor />} />
+              <Route path="/trimtrack" element={<TrimTrack />} />
               <Route path="/livestream" element={<LiveStream />} />
               <Route path="/messages" element={
               <RequireAuth loginPath={'/login'}>
