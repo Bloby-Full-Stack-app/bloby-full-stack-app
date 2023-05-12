@@ -37,7 +37,8 @@ export const mergeTracks = (data) => {
     url: `http://localhost:8090/api/mergetracks`,
       method: 'POST',
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': 'application/json',
+        Authorization: `${token}`,
       },
       data,
   }
@@ -49,6 +50,7 @@ export const uploadTrack = (data) => {
       method: 'POST',
       headers: {
         'Content-Type': 'multipart/form-data',
+        Authorization: `${token}`,
       },
       data,
   }

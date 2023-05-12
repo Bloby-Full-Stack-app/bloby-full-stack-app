@@ -5,7 +5,7 @@ import axios from '../../api/axios';
 import { useDispatch } from 'react-redux';
 import { likeTrack } from '../../redux/actions/tracks';
 
-function TrackList({ tracks, inPlaylist }) {
+function TrackList({ tracks, inPlaylist, addTrack }) {
   const dispatch = useDispatch();
   
   const [likedTracks, setLikedTracks] = useState([]);
@@ -52,6 +52,7 @@ function TrackList({ tracks, inPlaylist }) {
           artist={track.artist}
           album={track.album}
           mp3={track.mp3}
+          addTrackToList={() => addTrack(track)}
           handleLikeTrack={handleLikeTrack(track._id)}
           isLiked={likedTracks.includes(track._id)}
           inPlaylist={inPlaylist}

@@ -28,6 +28,7 @@ function TrackEditor() {
     const [currentUserReleases, setCurrentUserReleases] = useState([]);
     const [likedTracks, setLikedTracks] = useState([])
     const [files, setFiles] = useState([]);
+    const [newAudioFiles, setNewAudioFiles] = useState([]);
     const [audio1, setAudio1] = useState({
         title: "",
         src: "",
@@ -36,7 +37,8 @@ function TrackEditor() {
 
     const [output, setOutput] = useState({
         title: "",
-        src: ""
+        src: "",
+        file: null
     });
 
     const [audio2, setAudio2] = useState({
@@ -46,7 +48,7 @@ function TrackEditor() {
     });
 
     const [selected, setSelected] = useState("fadein");
-    const [volume, setVolume] = useState(0.5);
+    const [volume, setVolume] = useState(1);
     const [fadeIn, setFadeIn] = useState(0);
     const [fadeOut, setFadeOut] = useState(0);
     const [pitch, setPitch] = useState(1);
@@ -96,9 +98,29 @@ function TrackEditor() {
         }
     };
 
+    const addTrackToMergeList = (track) => {
+        console.log(track)
+        // check at first if audio1 is empty of not if it is set the audio1 else set audio 2
+
+        if (audio1.src === "") {
+            setAudio1({
+                title: track.name,
+                src: track.mp3,
+                file: track.file,
+            })
+        } else {
+            setAudio2({
+                title: track.name,
+                src: track.mp3,
+                file: track.file,
+            })
+        }
+        console.log("works")
+    };
+    
+
     const handleFileUpload = async (event) => {
         const newFiles = event.target.files;
-        const newAudioFiles = [];
       
         // Create an array of new audio files
         for (let i = 0; i < newFiles.length; i++) {
@@ -108,48 +130,54 @@ function TrackEditor() {
             src: URL.createObjectURL(file),
             file: file
           };
-          newAudioFiles.push(newAudio);
+          if (newAudioFiles.length < 2) {
+            setNewAudioFiles((prevAudioFiles) => [...prevAudioFiles, newAudio]);
+          } else {
+            console.log("Maximum limit of 3 files reached");
+            break;
+          }
         }
       
         // If there are already files uploaded, append the new files to the existing files array
-        const updatedFiles = files.length > 0 ? [...files, ...newFiles] : newFiles;
-      
-        if (newAudioFiles.length === 1) {
-          if (!audio1.src) {
-            setAudio1(newAudioFiles[0]);
-          } else if (!audio2.src) {
-            setAudio2(newAudioFiles[0]);
-          } else {
-            // Handle case where there are already 2 files uploaded
-            console.log("Only 2 files can be uploaded at a time");
-          }
-        } else if (newAudioFiles.length > 1) {
-          setAudio1(newAudioFiles[0]);
-          setAudio2(newAudioFiles[1]);
-          console.log("Only the first 2 files will be uploaded");
-        }
-      
-        console.log(newAudioFiles);
-        console.log(updatedFiles);
+        const updatedFiles = newAudioFiles.length > 0 ? [...files, ...newFiles] : newFiles;
         setFiles(updatedFiles);
       };
-      
 
-    const handleFile1Removal = (async) => {
+    useEffect(() => {
+        if (newAudioFiles.length === 1) {
+            if (!audio1.src) {
+              setAudio1(newAudioFiles[0]);
+            } else if (!audio2.src) {
+              setAudio2(newAudioFiles[0]);
+            } else {
+              console.log("Only 2 files can be uploaded at a time");
+            }
+          } else if (newAudioFiles.length > 1) {
+            setAudio1(newAudioFiles[0]);
+            setAudio2(newAudioFiles[1]);
+            console.log("Only the first 2 files will be uploaded");
+          } else {
+            setAudio1({ title: "", src: "", file: null });
+            setAudio2({ title: "", src: "", file: null });
+          }
+        console.log(files);
+      }, [newAudioFiles]);
+
+    const handleFile1Removal = () => {
         setAudio1({
             title: "",
             src: "",
             file: null
         });
-    }
+    };
 
-    const handleFile2Removal = (async) => {
+    const handleFile2Removal = () => {
         setAudio2({
             title: "",
             src: "",
             file: null
         });
-    }
+    };
 
     useEffect(() => {
         console.log(output.src)
@@ -159,17 +187,15 @@ function TrackEditor() {
         setIsLoading(true);
         setIsOpen2(true);
         const formData = new FormData();
-        for (let i = 0; i < files.length; i++) {
-            formData.append(`mp3Files`, files[i]);
             formData.append(`fadeinDuration`, fadeIn);
             formData.append(`pitch`, pitch);
             formData.append(`speed`, speed);
             formData.append(`fadeoutDuration`, fadeOut);
             formData.append(`volume`, volume)
-        }
+            formData.append(`firstfile`, audio1.file)
+            formData.append(`secondfile`, audio2.file)
 
         const promise = dispatch(getUploadedTracks(formData));
-        console.log(files)
         promise.then(res => {
             //const blobUrl = URL.createObjectURL(new Blob([res.data.mp3], { type: 'audio' }));
             setName(res.data.name || '')
@@ -180,7 +206,8 @@ function TrackEditor() {
             setMp3File(res.data.mp3)
             setOutput({
                 title: res.data.artist,
-                src: res.data.mp3
+                src: res.data.mp3,
+                file: res.data.file
             });
             setIsLoading(false)
             setIsOpen2(false);
@@ -237,7 +264,7 @@ function TrackEditor() {
                                     </div>
                                     <div className="dashbox__list-wrap">
                                         <ul className="main__list main__list--dashbox dashbox__scroll">
-                                            <TrackList tracks={likedTracks} />
+                                            <TrackList inPlaylist={true} addTrack={addTrackToMergeList} tracks={likedTracks} />
                                         </ul>
                                     </div>
                                 </div>
@@ -254,7 +281,7 @@ function TrackEditor() {
                                     </div>
                                     <div className="dashbox__list-wrap">
                                         <ul className="main__list main__list--dashbox dashbox__scroll">
-                                            <TrackList tracks={currentUserReleases} />
+                                        <TrackList inPlaylist={true} addTrack={addTrackToMergeList} tracks={currentUserReleases} />
                                         </ul>
                                     </div>
                                 </div>
@@ -263,23 +290,6 @@ function TrackEditor() {
                     </div>
                 </div>
                 <div className="row row--grid">
-                    <div className="col-12">
-                        <div>
-                            <label htmlFor="fileInput" className="hero__btn hero__btn--video">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <path d="M19,11H13V5a1,1,0,0,0-2,0v6H5a1,1,0,0,0,0,2h6v6a1,1,0,0,0,2,0V13h6a1,1,0,0,0,0-2Z" />
-                                </svg>
-                                Upload Tracks
-                            </label>
-                            <input
-                                id="fileInput"
-                                type="file"
-                                multiple
-                                style={{ display: "none" }}
-                                onChange={handleFileUpload}
-                            />
-                        </div>
-                    </div>
                     <div className="col-12">
                         {audio1.title && audio1.src &&
                             <div className="dashbox">
@@ -374,7 +384,7 @@ function TrackEditor() {
                         }
 
                         {isOpen &&
-                            <AddTrack title={name} artists={artist} images={image} albums={album} genres={genre} mp3={output.src} onCloseModal={() => setIsOpen2(false)} />
+                            <AddTrack title={name} artists={artist} images={image} albums={album} genres={genre} mp3={output.src} file={output.file} onCloseModal={() => setIsOpen(false)} />
                         }
                     </div>
                 </div>

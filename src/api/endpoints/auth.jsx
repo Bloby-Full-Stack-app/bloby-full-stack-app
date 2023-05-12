@@ -25,4 +25,12 @@ export const getUsers = params => {
         Authorization: `${token}`,
       },
     };
+};
+
+export const getArtistById = ({userId, params}) => {
+    return {
+      url: `http://localhost:8090/api/artist/${userId}`,
+      method: 'GET',
+      params,
+    };
   };

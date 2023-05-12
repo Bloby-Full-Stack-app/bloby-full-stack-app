@@ -3,7 +3,7 @@ import { AudioContext } from '../context/AudioContext';
 
 function Player() {
   const { audioState, setAudioState, setCurrentTime, setIsPlaying } = useContext(AudioContext);
-  const { audioSrc, currentTime, isPlaying } = audioState;
+  const { audioSrc, currentTime, isPlaying, title, artist, image } = audioState;
   const audioRef = useRef();
 
   useEffect(() => {
@@ -13,6 +13,9 @@ function Player() {
         audioSrc: storedTrack.audioSrc,
         currentTime: storedTrack.currentTime,
         isPlaying: storedTrack.isPlaying,
+        title: storedTrack.title,
+        artist: storedTrack.artist,
+        image: storedTrack.image
       });
     }
   }, []);
@@ -20,7 +23,7 @@ function Player() {
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.currentTime = currentTime;
-      if (isPlaying) {
+      if (audioState.isPlaying) {
         audioRef.current.play();
       } else {
         audioRef.current.pause();
@@ -31,13 +34,13 @@ function Player() {
   return (
     <div className="player">
       <div className="player__cover">
-        <img src="assets/img/covers/cover.svg" alt="" />
+        <img src={image} alt="" />
       </div>
 
       <div className="player__content">
         <span className="player__track">
-          <b className="player__title">Epic Cinematic</b> –{" "}
-          <span className="player__artist">AudioPizza</span>
+          <b className="player__title">{title.length > 20 ? `${title.substring(0, 10)}...` : title}</b> –{" "}
+          <span className="player__artist">{artist}</span>
         </span>
         <audio
           src={audioSrc}

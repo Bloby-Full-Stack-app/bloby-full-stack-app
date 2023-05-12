@@ -9,6 +9,7 @@ const AddTrack = (props, { title, artists, genres, albums, images}) => {
 	const [artist, setArtist] = useState(artists)
 	const [genre, setGenre] = useState(genres)
 	const [album, setAlbum] = useState(albums)
+    const [file, setFile] = useState(props.file);
 	const [mp3File, setMp3File] = useState(props.mp3)
 
     const handleAddTrack = (event) => {
@@ -19,6 +20,7 @@ const AddTrack = (props, { title, artists, genres, albums, images}) => {
         formData.append('album', album);
         formData.append('Image', image);
         formData.append('mp3', mp3File);
+        formData.append('file', file)
         dispatch(createTrack(formData));
         //props.onCloseModal();
     };

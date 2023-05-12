@@ -2,9 +2,12 @@ import React, { useState } from 'react'
 import BuyTicketModal from './Modals/BuyTicketModal';
 import { FaStar, FaRegStar } from 'react-icons/fa'
 import { Link } from 'react-router-dom';
+import { useIsAuthenticated } from 'react-auth-kit';
 
 function UpcomingEvent(props) {
     //const [soldOut, setSoldOut] = useState(false);
+    const isAuthenticated = useIsAuthenticated();
+	const auth = isAuthenticated();
 
     const [isOpen, setIsOpen] = useState(false);
     const handleBuyTickets = () => {
@@ -51,10 +54,16 @@ function UpcomingEvent(props) {
                     right: '5px',
                     transform: '',
                 }}>
+                    {auth ? (
+                        <>
                     {props.isSaved ? (
                         <FaStar style={{ color: '#FFCA28', width: '1.5em', height: '1.5em' }} />
                     ) : (
                         <FaRegStar style={{ color: '#FFCA28', width: '1.5em', height: '1.5em' }} />
+                    )}
+                    </>
+                    ) : (
+                        <></>
                     )}
                 </a>
                 <span className="event__date">{props.date}</span>

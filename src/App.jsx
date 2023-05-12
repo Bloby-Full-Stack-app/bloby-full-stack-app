@@ -25,6 +25,7 @@ import Register from './Pages/Register';
 import Events from './Pages/Events';
 import Messages from './Pages/Messages';
 import Event from './Pages/Event';
+import Artist from './Pages/Artist';
 
 
 const PrivateRoute = ({ Component }) => {
@@ -52,6 +53,7 @@ function App() {
               <Route path="/Events" element={<Events />} />
               <Route path="/playlist/:playlistId" element={<Playlist />} />
               <Route path="/event/:eventId" element={<Event />} />
+              <Route path="/artist/:userId" element={<Artist />} />
               <Route path="/trackeditor" element={<TrackEditor />} />
               <Route path="/livestream" element={<LiveStream />} />
               <Route path="/messages" element={

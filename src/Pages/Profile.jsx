@@ -13,14 +13,13 @@ import { createEvent } from '../redux/actions/event';
 import { getEvents } from '../api/endpoints/event';
 import { LocalizationProvider, MobileDateTimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import dayjs from 'dayjs'
 
 function Profile() {
 	const user = JSON.parse(localStorage.getItem("_auth_state"));
 	const dispatch = useDispatch()
 	const [likedTracks, setLikedTracks] = useState([])
 	const [name, setName] = useState('')
-	const [image, setImage] = useState('http://localhost:8090/public/images/864a32cf-ce9b-45d9-a980-addf3990f42a.png')
+	const [image, setImage] = useState('http://localhost:3000/assets/img/covers/cover.svg')
 	const [artist, setArtist] = useState('')
 	const [genre, setGenre] = useState('')
 	const [album, setAlbum] = useState('')
@@ -28,6 +27,7 @@ function Profile() {
 	const [title, setTitle] = useState('');
 	const [about, setAbout] = useState('');
 	const [date, setDate] = useState('');
+	const [trackFile, setTrackFile] = useState({})
 	const [eventImage, setEventImage] = useState(null);
 	const [address, setAddress] = useState('')
 	const [playlists, setPlaylists] = useState([]);
@@ -50,6 +50,7 @@ function Profile() {
 			setGenre(res.data.genre || '')
 			setAlbum(res.data.album || '')
 			setMp3File(res.data.mp3)
+			setTrackFile(res.data.file)
 		}).catch(error => {
 			console.log(error); // this will log any errors that occurred during the request
 		});
@@ -60,9 +61,10 @@ function Profile() {
 		formData.append('name', name);
 		formData.append('artist', artist);
 		formData.append('genre', genre);
-		formData.append('Image', image);
+		formData.append('image', image);
 		formData.append('album', album);
 		formData.append('mp3', mp3File);
+		formData.append('file', trackFile);
 		dispatch(createTrack(formData));
 	}
 
@@ -153,34 +155,29 @@ function Profile() {
 								</div>
 								<div className="profile__meta">
 									<h3>{user.username}</h3>
-									<span>Volna ID: 11104</span>
+									<span>{user.role}</span>
 								</div>
 							</div>
-
 							<ul className="nav nav-tabs profile__tabs" id="profile__tabs" role="tablist">
 								<li className="nav-item">
 									<a className="nav-link active" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab-1" aria-selected="true">Profile</a>
 								</li>
-
-								<li className="nav-item">
-									<a className="nav-link" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab-2" aria-selected="false">Releases</a>
-								</li>
 								{user.role == 'Artist' &&
-								<>
-								<li className="nav-item">
-									<a className="nav-link" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3" aria-selected="false">Upload new track</a>
-								</li>
-
-								<li className="nav-item">
-									<a className="nav-link" data-toggle="tab" href="#tab-5" role="tab" aria-controls="tab-5" aria-selected="false">Events</a>
-								</li>
-								</>
+									<>
+										<li className="nav-item">
+											<a className="nav-link" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab-2" aria-selected="false">Releases</a>
+										</li>
+										<li className="nav-item">
+											<a className="nav-link" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3" aria-selected="false">Upload new track</a>
+										</li>
+										<li className="nav-item">
+											<a className="nav-link" data-toggle="tab" href="#tab-5" role="tab" aria-controls="tab-5" aria-selected="false">Events</a>
+										</li>
+									</>
 								}
 								<li className="nav-item">
 									<a className="nav-link" data-toggle="tab" href="#tab-4" role="tab" aria-controls="tab-4" aria-selected="false">Settings</a>
 								</li>
-
-
 							</ul>
 
 							<button onClick={() => signOut()} className="profile__logout" type="button">
@@ -256,51 +253,46 @@ function Profile() {
 								<div className="row row--grid">
 									<div className="col-12">
 										<form onSubmit={handleSubmit} className="sign__form sign__form--profile">
-											<div className="row">
-												<div className="col-12">
-													<h4 className="sign__title">Upload track</h4>
+											<div className="release">
+												<div className="release__content">
+													<label className="sign__label">Cover</label>
+													<div className="release__cover">
+														<img src={image} alt="" onChange={e => setImage(e?.target?.src)} />
+													</div>
+													<div className="release__stat">
+														<input id="mp3" name="mp3" type="file" onChange={handleMp3Upload} />
+													</div>
 												</div>
-												<div className="release">
-													<div className="release__content">
-														<label className="sign__label">Cover</label>
-														<div className="release__cover">
-															<img src={image} alt="" onChange={e => setImage(e?.target?.src)} />
-														</div>
-														<div className="release__stat">
-															<input id="mp3" name="mp3" type="file" onChange={handleMp3Upload} />
+												<div className="release__list">
+													<div className="col-12">
+														<div className="sign__group">
+															<label className="sign__label">Title</label>
+															<input id="title" type="text" name="title" className="sign__input" placeholder="Title" value={name} onChange={e => setName(e?.target?.value)} />
 														</div>
 													</div>
-													<div className="release__list">
-														<div className="col-12">
-															<div className="sign__group">
-																<label className="sign__label">Title</label>
-																<input id="title" type="text" name="title" className="sign__input" placeholder="Title" value={name} onChange={e => setName(e?.target?.value)} />
-															</div>
+													<div className="col-12">
+														<div className="sign__group">
+															<label className="sign__label">Artist</label>
+															<input id="artist" type="text" name="artist" className="sign__input" placeholder="Artist" value={artist} onChange={e => setArtist(e?.target?.value)} />
 														</div>
-														<div className="col-12">
-															<div className="sign__group">
-																<label className="sign__label">Artist</label>
-																<input id="artist" type="text" name="artist" className="sign__input" placeholder="Artist" value={artist} onChange={e => setArtist(e?.target?.value)} />
-															</div>
+													</div>
+													<div className="col-12">
+														<div className="sign__group">
+															<label className="sign__label">Genre</label>
+															<input id="genre" type="text" name="genre" className="sign__input" placeholder="Genre" value={genre} onChange={e => setGenre(e?.target?.value)} />
 														</div>
-														<div className="col-12">
-															<div className="sign__group">
-																<label className="sign__label">Genre</label>
-																<input id="genre" type="text" name="genre" className="sign__input" placeholder="Genre" value={genre} onChange={e => setGenre(e?.target?.value)} />
-															</div>
+													</div>
+													<div className="col-12">
+														<div className="sign__group">
+															<label className="sign__label">Album</label>
+															<input id="album" type="text" name="album" className="sign__input" placeholder="Album" value={album} onChange={e => setAlbum(e?.target?.value)} />
 														</div>
-														<div className="col-12">
-															<div className="sign__group">
-																<label className="sign__label">Album</label>
-																<input id="album" type="text" name="album" className="sign__input" placeholder="Album" value={album} onChange={e => setAlbum(e?.target?.value)} />
-															</div>
-														</div>
+													</div>
 
-													</div>
 												</div>
-												<div className="col-12">
-													<button className="sign__btn" type="submit">Upload</button>
-												</div>
+											</div>
+											<div className="col-12">
+												<button className="sign__btn" type="submit">Upload</button>
 											</div>
 										</form>
 									</div>
@@ -426,10 +418,10 @@ function Profile() {
 															<label className="sign__label">Date</label>
 															<LocalizationProvider dateAdapter={AdapterDayjs}>
 																<MobileDateTimePicker label={'"year"'} openTo="year" value={date}
-  																	onChange={(newValue) => setDate(newValue)} />
-    														</LocalizationProvider>
+																	onChange={(newValue) => setDate(newValue)} />
+															</LocalizationProvider>
 														</div>
-														
+
 													</div>
 													<div className="col-12">
 														<div className="sign__group">
