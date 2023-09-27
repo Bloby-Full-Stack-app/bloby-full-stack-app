@@ -11,6 +11,8 @@ import ReleaseList from '../components/Release/ReleaseList';
 import axios from 'axios'
 import { fetchSavedEvents, getEvents } from '../api/endpoints/event'
 import { fetchReleases } from '../api/endpoints/releases'
+import { addEventToFavorites } from '../redux/actions/event'
+import { useDispatch } from 'react-redux'
 
 
 function Home() {
@@ -18,6 +20,7 @@ function Home() {
 	const [events, setEvents] = useState([])
 	const [savedEvents, setSavedEvents] = useState([])
 	const [releases, setReleases] = useState([])
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		const getReleases = async () => {
@@ -73,6 +76,22 @@ function Home() {
 		fetchSavedEventsList();
 		fetchTracksList();
 	}, []);
+
+	const handleAddToFavorites = (eventId) => {
+        return async (event) => {
+            event.preventDefault();
+
+            const promise = dispatch(addEventToFavorites(eventId));
+
+            promise.then(res => {
+                const updateSavedEvents = res.isSaved
+                    ? [...savedEvents, eventId]
+                    : savedEvents.filter(id => id !== eventId);
+
+                setSavedEvents(updateSavedEvents);
+            });
+        };
+    };
 	return (
 		<main className="main">
 			<div className="container-fluid">
@@ -130,7 +149,7 @@ function Home() {
 							{events.slice(0, 3).map((event) => (
 								<React.Fragment key={event._id}>
 									<div className="col-12 col-md-6 col-xl-4">
-										<UpcomingEvent id={event._id} isSaved={savedEvents.includes(event._id)} img={event.image} soldOut={false} date={new Date(event.date).toLocaleString()} time="7:00 pm" name={event.title} address={event.address} />
+										<UpcomingEvent id={event._id} handleAddToFavorites={handleAddToFavorites(event._id)} isSaved={savedEvents.includes(event._id)} img={event.image} soldOut={false} date={new Date(event.date).toLocaleString()} time="7:00 pm" name={event.title} address={event.address} />
 									</div>
 								</React.Fragment>
 							))}

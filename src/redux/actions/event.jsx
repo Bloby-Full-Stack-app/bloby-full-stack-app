@@ -45,9 +45,8 @@ export const addEventToFavorites = eventId => async dispatch => {
         type: ADD_EVENT_TO_FAVORITES_SUCCESS,
         payload: res.data.message,
       });
-      dispatch(setAlert('Event added to favorites', 'success'));
+      dispatch(setAlert(res.data.message, 'success'));
       return res.data;
-      //dispatch(setAlert(res.data.message, 'success'));
     } catch (err) {
       dispatch({
         type: ADD_EVENT_TO_FAVORITES_FAIL,

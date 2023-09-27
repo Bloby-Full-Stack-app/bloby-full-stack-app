@@ -99,8 +99,6 @@ function Events() {
                                     </div>
                                 </React.Fragment>
                             ))}
-
-
                         </div>
 
                         <div className="row row--grid">

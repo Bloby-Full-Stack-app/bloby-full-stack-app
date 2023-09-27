@@ -11,7 +11,7 @@ const LiveStream = () => {
 
   useEffect(() => {
     const options = {
-      roomName: 'bwb-bfqi-vmg',
+      roomName: 'Bloby-room',
       width: '100%',
       height: 660,
       executeCommand : {executeCommand},
